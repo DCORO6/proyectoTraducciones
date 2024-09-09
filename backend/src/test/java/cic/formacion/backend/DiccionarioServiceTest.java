@@ -162,33 +162,26 @@ public class DiccionarioServiceTest {
     void testUpdateIdioma() {
         Long idiomaId = 1L;
 
-        // Idioma existente
         Idioma existingIdioma = new Idioma();
         existingIdioma.setId(idiomaId);
         existingIdioma.setNombre("Español");
         existingIdioma.setCodigoIso("ESP");
         existingIdioma.setRegion("España");
 
-        // Idioma actualizado
         Idioma updatedIdiomaDetails = new Idioma();
         updatedIdiomaDetails.setNombre("Español Actualizado");
         updatedIdiomaDetails.setCodigoIso("ESP");
         updatedIdiomaDetails.setRegion("España Actualizada");
 
-        // Configura el mock para devolver el idioma existente cuando se busque por ID
         when(idiomaRepository.findById(idiomaId)).thenReturn(Optional.of(existingIdioma));
-        // Configura el mock para devolver el idioma actualizado al guardar
         when(idiomaRepository.save(existingIdioma)).thenReturn(existingIdioma);
 
-        // Llama al método de actualización
         Idioma updatedIdioma = diccionarioService.updateIdioma(idiomaId, updatedIdiomaDetails);
 
-        // Verifica que el idioma se haya actualizado correctamente
         assertEquals("Español Actualizado", updatedIdioma.getNombre());
         assertEquals("ESP", updatedIdioma.getCodigoIso());
         assertEquals("España Actualizada", updatedIdioma.getRegion());
 
-        // Verifica que el repositorio haya sido llamado con el ID correcto y el idioma actualizado
         verify(idiomaRepository, times(1)).findById(idiomaId);
         verify(idiomaRepository, times(1)).save(existingIdioma);
     }

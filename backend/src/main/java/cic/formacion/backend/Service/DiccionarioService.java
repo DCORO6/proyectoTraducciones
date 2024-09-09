@@ -23,7 +23,6 @@ public class DiccionarioService {
     @Autowired
     private PalabraRepository palabraRepository;
 
-
     @Transactional(readOnly = true)
     public List<Idioma> getAllIdiomas() {
         return idiomaRepository.findAll();
@@ -33,6 +32,7 @@ public class DiccionarioService {
     public Optional<Idioma> getIdiomaById(Long id) {
         return idiomaRepository.findById(id);
     }
+
 
     @Transactional
     public Idioma createIdioma(Idioma idioma) {
@@ -49,7 +49,6 @@ public class DiccionarioService {
         return idiomaRepository.existsById(id);
     }
 
-
     @Transactional(readOnly = true)
     public List<Palabra> getAllPalabras() {
         return palabraRepository.findAll();
@@ -60,20 +59,17 @@ public class DiccionarioService {
         return palabraRepository.findById(id);
     }
 
-    
-
-   
     @Transactional
     public Idioma updateIdioma(Long id, Idioma updatedIdioma) {
         return idiomaRepository.findById(id)
-            .map(existingIdioma -> {
-                existingIdioma.setNombre(updatedIdioma.getNombre());
-                existingIdioma.setCodigoIso(updatedIdioma.getCodigoIso());
-                existingIdioma.setAlfabeto(updatedIdioma.getAlfabeto());
-                existingIdioma.setRegion(updatedIdioma.getRegion());
-                return idiomaRepository.save(existingIdioma);
-            })
-            .orElseThrow(() -> new EntityNotFoundException("Idioma not found"));
+                .map(existingIdioma -> {
+                    existingIdioma.setNombre(updatedIdioma.getNombre());
+                    existingIdioma.setCodigoIso(updatedIdioma.getCodigoIso());
+                    existingIdioma.setAlfabeto(updatedIdioma.getAlfabeto());
+                    existingIdioma.setRegion(updatedIdioma.getRegion());
+                    return idiomaRepository.save(existingIdioma);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Idioma not found"));
     }
 
     @Transactional
@@ -97,7 +93,6 @@ public class DiccionarioService {
             return palabraRepository.save(palabra);
         });
     }
-
 
     @Transactional
     public void deletePalabra(Long id) {
