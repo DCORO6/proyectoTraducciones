@@ -31,12 +31,16 @@ public class PalabraController {
         return diccionarioService.getAllPalabras();
     }
 
-    @PostMapping("/idioma/{idiomaId}")
+    @PostMapping("/{idiomaId}/agregar")
     public ResponseEntity<Palabra> createPalabra(@PathVariable Long idiomaId, @RequestBody Palabra palabra) {
+        System.out.println("Idioma ID: " + idiomaId);
+        System.out.println("Palabra recibida: " + palabra);
         return diccionarioService.createPalabra(idiomaId, palabra)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Palabra> getPalabraById(@PathVariable Long id) {
@@ -51,7 +55,7 @@ public class PalabraController {
             return ResponseEntity.notFound().build();
         }
 
-        palabra.setId(id);  
+        palabra.setId(id);
         Optional<Palabra> updatedPalabra = diccionarioService.updatePalabra(id, palabra);
         return updatedPalabra
                 .map(ResponseEntity::ok)

@@ -19,10 +19,10 @@ public class Palabra {
     @Column(nullable = false, length = 100)
     private String palabra;
 
-    @Column(length = 1000)
+    @Column(nullable = false,length = 1000)
     private String descripcion;
 
-    @Column(name = "ejemplo_uso",length = 1000)
+    @Column(nullable = false,name = "ejemplo_uso",length = 1000)
     private String ejemploUso;
 
     @Column(name = "nivel_dificultad", nullable = false)

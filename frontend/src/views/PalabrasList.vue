@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="header">
+      <button @click="goToCreateForm" class="btn-create">Crear Nueva Palabra</button>
+    </div>
     <div v-if="loading" class="loading">Cargando...</div>
     <div v-else>
       <div v-if="palabras.length > 0" class="cards-container">
@@ -34,13 +37,13 @@
     <div v-if="showDetailsModal" class="modal-overlay">
       <div class="modal">
         <button @click="closeDetails" class="btn-close">×</button>
-        <h3>Detalles</h3>
+        <h2>Detalles</h2>
         <p><strong>Palabra:</strong> {{ selectedPalabra.palabra }}</p>
         <p><strong>Descripción:</strong> {{ selectedPalabra.descripcion }}</p>
-        <p class="example-box"><strong>Ejemplo de Uso:</strong> {{ selectedPalabra.ejemploUso }}</p>
-        <p><strong>Nivel de Dificultad:</strong> {{ selectedPalabra.nivelDificultad }}</p>
-        <p><strong>Frecuencia de Uso:</strong> {{ selectedPalabra.frecuenciaUso }}</p>
-        <p><strong>Fecha de Creación:</strong> {{ selectedPalabra.fechaCreacion }}</p>
+        <p class="example-box"><strong>Ejemplo de uso:</strong> {{ selectedPalabra.ejemploUso }}</p>
+        <p><strong>Nivel de dificultad:</strong> {{ selectedPalabra.nivelDificultad }}</p>
+        <p><strong>Frecuencia de uso:</strong> {{ selectedPalabra.frecuenciaUso }}</p>
+        <p><strong>Fecha de creación:</strong> {{ selectedPalabra.fechaCreacion }}</p>
         <p><strong>Idioma:</strong> {{ selectedPalabra.idioma.nombre }}</p>
       </div>
     </div>
@@ -51,7 +54,9 @@
 import { ref, onMounted } from 'vue';
 import axios from '@/axios';
 import { useToast } from 'vue-toast-notification';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const toast = useToast();
 
 const palabras = ref([]);
@@ -95,6 +100,10 @@ const deletePalabra = async () => {
   }
 };
 
+const goToCreateForm = () => {
+  router.push({ name: 'PalabrasForm' }); 
+};
+
 const viewDetails = (palabra) => {
   selectedPalabra.value = palabra;
   showDetailsModal.value = true;
@@ -111,7 +120,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Estilos para la lista de cards */
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -120,7 +128,6 @@ onMounted(() => {
   margin: 20px;
 }
 
-/* Estilos para cada card */
 .card {
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
@@ -223,6 +230,7 @@ onMounted(() => {
   padding: 10px;
   background-color: #f9f9f9;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .btn-confirm {
@@ -274,4 +282,27 @@ onMounted(() => {
   font-size: 1.5rem;
   color: #555;
 }
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+}
+
+.btn-create {
+  background-color: #28a745;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-create:hover {
+  background-color: #218838;
+}
+
 </style>
