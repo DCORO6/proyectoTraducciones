@@ -2,67 +2,30 @@
   <form @submit.prevent="handleSubmit" class="add-palabra-form">
     <div class="form-group">
       <label for="palabra">Palabra:</label>
-      <input
-        type="text"
-        id="palabra"
-        v-model="formData.palabra"
-        required
-        class="form-control"
-      />
+      <input type="text" id="palabra" v-model="formData.palabra" maxlength="30" required class="form-control" />
     </div>
     <div class="form-group">
       <label for="descripcion">Descripción:</label>
-      <textarea
-        id="descripcion"
-        v-model="formData.descripcion"
-        class="form-control"
-        required
-      ></textarea>
+      <textarea id="descripcion" v-model="formData.descripcion" maxlength="500" class="form-control" required></textarea>
     </div>
     <div class="form-group">
       <label for="ejemploUso">Ejemplo de uso:</label>
-      <textarea
-        id="ejemploUso"
-        v-model="formData.ejemploUso"
-        class="form-control"
-        required
-      ></textarea>
+      <textarea id="ejemploUso" v-model="formData.ejemploUso" maxlength="500" class="form-control" required></textarea>
     </div>
     <div class="form-group">
       <label for="nivelDificultad">Nivel de dificultad (0-10):</label>
-      <input
-        type="number"
-        id="nivelDificultad"
-        v-model.number="formData.nivelDificultad"
-        min="0"
-        max="10"
-        required
-        class="form-control numeric-right"
-      />
+      <input type="number" id="nivelDificultad" v-model.number="formData.nivelDificultad" min="0" max="10" required
+        class="form-control numeric-right small-input" />
     </div>
     <div class="form-group">
       <label for="frecuenciaUso">Frecuencia de uso (0-10):</label>
-      <input
-        type="number"
-        id="frecuenciaUso"
-        v-model.number="formData.frecuenciaUso"
-        min="0"
-        max="10"
-        required
-        class="form-control numeric-right"
-      />
+      <input type="number" id="frecuenciaUso" v-model.number="formData.frecuenciaUso" min="0" max="10" required
+        class="form-control numeric-right small-input" />
     </div>
     <div class="form-group">
       <label for="fechaCreacion">Fecha de creación:</label>
-      <input
-        type="text"
-        id="fechaCreacion"
-        :value="formattedFechaCreacion"
-        readonly
-        class="form-control"
-        disabled
-        required
-      />
+      <input type="text" id="fechaCreacion" :value="formattedFechaCreacion" readonly class="form-control small-input" disabled
+        required />
     </div>
     <div class="form-group">
       <label for="idioma">Idioma:</label>
@@ -71,6 +34,7 @@
         v-model="formData.idiomaId"
         required
         class="form-control"
+        @change="onIdiomaChange"
       >
         <option value="">Selecciona un idioma</option>
         <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
@@ -79,7 +43,9 @@
       </select>
     </div>
     <div class="form-buttons">
-      <button type="submit" class="btn-submit">Agregar Palabra</button>
+      <button type="submit" class="btn-submit">
+        {{ isEditMode ? 'Actualizar Palabra' : 'Agregar Palabra' }}
+      </button>
       <button type="button" class="btn-back" @click="goBack">Volver</button>
     </div>
   </form>
@@ -88,7 +54,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 // Función para formatear la fecha
 const formatDate = (date) => {
@@ -98,6 +64,11 @@ const formatDate = (date) => {
   return `${day}-${month}-${year}`;
 };
 
+const router = useRouter();
+const route = useRoute();  // Usamos el route para obtener el ID si es edición
+
+const isEditMode = ref(false);  // Estado para verificar si es modo edición
+
 // Estado reactivo para los datos del formulario
 const formData = ref({
   palabra: '',
@@ -105,25 +76,59 @@ const formData = ref({
   ejemploUso: '',
   nivelDificultad: 0,
   frecuenciaUso: 0,
-  fechaCreacion: formatDate(new Date()), // Fecha actual en formato DD-MM-YYYY
+  fechaCreacion: formatDate(new Date()), // Fecha actual
   idiomaId: ''
 });
 
 const idiomas = ref([]);
 
-// Instancia del enrutador
-const router = useRouter();
+const loadPalabraDetails = async (id) => {
+  try {
+    const response = await axios.get(`/api/palabras/${id}`);
+    const palabra = response.data;
+    console.log('Detalles de palabra cargada:', palabra); // Depuración adicional
+    formData.value = {
+      palabra: palabra.palabra,
+      descripcion: palabra.descripcion,
+      ejemploUso: palabra.ejemploUso,
+      nivelDificultad: palabra.nivelDificultad,
+      frecuenciaUso: palabra.frecuenciaUso,
+      fechaCreacion: formatDate(new Date(palabra.fechaCreacion)),
+      idiomaId: palabra.idioma.id
+    };
+  } catch (error) {
+    console.error('Error al cargar la palabra:', error);
+  }
+};
 
-// Función para manejar el envío del formulario
+const onIdiomaChange = () => {
+  console.log('Idioma seleccionado:', formData.value.idiomaId);
+};
+
 const handleSubmit = () => {
-  const { idiomaId, ...palabraData } = formData.value;
+  console.log('Form Data antes de enviar:', formData.value);
+  
+  const palabraData = { ...formData.value };
+  const id = route.query.id || route.params.id;
 
-  axios.post(`/api/palabras/${idiomaId}/agregar`, palabraData)
-    .then(response => {
-      console.log('Palabra creada:', response.data);
-      resetForm();
-    })
-    .catch(error => console.error('Error al crear palabra:', error));
+  if (isEditMode.value) {
+    console.log('Actualizando palabra con datos:', palabraData);
+    axios.put(`/api/palabras/${id}`, palabraData)
+      .then(() => {
+        console.log('Palabra actualizada');
+        router.push('/palabras');
+      })
+      .catch(error => console.error('Error al actualizar palabra:', error));
+  } else {
+    console.log('Creando palabra con datos:', palabraData);
+    axios.post(`/api/palabras/${formData.value.idiomaId}/agregar`, palabraData)
+      .then(() => {
+        console.log('Palabra creada');
+        router.push('/palabras');
+        resetForm();
+      })
+      .catch(error => console.error('Error al crear palabra:', error));
+  }
 };
 
 // Función para restablecer el formulario
@@ -134,26 +139,30 @@ const resetForm = () => {
     ejemploUso: '',
     nivelDificultad: 0,
     frecuenciaUso: 0,
-    fechaCreacion: formatDate(new Date()), // Restablecer la fecha actual en formato DD-MM-YYYY
+    fechaCreacion: formatDate(new Date()), // Restablecer la fecha actual
     idiomaId: ''
   };
 };
 
-// Función para retroceder en el historial
+// Función para volver atrás
 const goBack = () => {
-  router.back(); 
+  router.back();
 };
 
-// Computed para la fecha formateada
 const formattedFechaCreacion = computed(() => formData.value.fechaCreacion);
 
-// Cargar idiomas cuando el componente se monta
 onMounted(() => {
   axios.get('/api/idiomas')
     .then(response => {
       idiomas.value = response.data;
     })
     .catch(error => console.error('Error al cargar idiomas:', error));
+
+  const id = route.query.id || route.params.id; // Ajusta según la configuración de la ruta
+  if (id) {
+    isEditMode.value = true;
+    loadPalabraDetails(id);  // Cargar los datos de la palabra a editar
+  }
 });
 </script>
 
@@ -182,10 +191,25 @@ onMounted(() => {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; /* Asegura que el padding no afecte al tamaño del elemento */
+}
+
+.form-group textarea {
+  height: 100px; /* Ajusta la altura del textarea según sea necesario */
+  resize: vertical; /* Permite el ajuste vertical del textarea */
+}
+
+.small-input {
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  padding: 6px; /* Padding reducido */
 }
 
 .form-group .form-control[readonly] {
   background-color: #e9ecef;
+}
+
+.numeric-right {
+  text-align: right;
 }
 
 .btn-submit {
@@ -199,10 +223,6 @@ onMounted(() => {
 
 .btn-submit:hover {
   background-color: #0056b3;
-}
-
-.numeric-right {
-  text-align: right;
 }
 
 .btn-back {

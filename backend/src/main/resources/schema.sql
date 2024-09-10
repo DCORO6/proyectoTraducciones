@@ -5,7 +5,8 @@ CREATE TABLE Idioma (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
     codigo_iso CHAR(3) NOT NULL UNIQUE,
-    alfabeto VARCHAR(20) CHECK (alfabeto IN ('LATINO', 'TIBETANO', 'ARMENIO', 'ARABE', 'CIRILICO', 'COREANO', 'GEORGIANO')),    region VARCHAR(100) NOT NULL
+    alfabeto VARCHAR(20) CHECK (alfabeto IN ('LATINO', 'TIBETANO', 'ARMENIO', 'ÁRABE', 'CIRÍLICO', 'COREANO', 'GEORGIANO')),  -- Actualizado con tildes
+    region VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Palabra (

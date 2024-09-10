@@ -1,4 +1,3 @@
--- Insertar datos en la tabla Idioma
 INSERT INTO Idioma (nombre, codigo_iso, alfabeto, region) VALUES
 ('Español', 'ESP', 'LATINO', 'España'),
 ('Inglés', 'GBR', 'LATINO', 'Reino Unido'),
@@ -6,10 +5,10 @@ INSERT INTO Idioma (nombre, codigo_iso, alfabeto, region) VALUES
 ('Alemán', 'DEU', 'LATINO', 'Alemania'),
 ('Italiano', 'ITA', 'LATINO', 'Italia'),
 ('Portugués', 'PTR', 'LATINO', 'Portugal'),
-('Chino', 'CHN', 'CIRILICO', 'China'),
+('Chino', 'CHN', 'CIRÍLICO', 'China'),
 ('Japonés', 'JPN', 'LATINO', 'Japón'),
-('Árabe', 'SAU', 'ARABE', 'Arabia Saudita'),
-('Ruso', 'RUS', 'CIRILICO', 'Rusia'),
+('Árabe', 'SAU', 'ÁRABE', 'Arabia Saudita'),
+('Ruso', 'RUS', 'CIRÍLICO', 'Rusia'),
 ('Coreano', 'KOR', 'COREANO', 'Corea del Sur'),
 ('Georgiano', 'GEO', 'GEORGIANO', 'Georgia'),
 ('Armenio', 'ARM', 'ARMENIO', 'Armenia');
@@ -75,7 +74,6 @@ INSERT INTO Palabra (palabra, descripcion, ejemplo_uso, nivel_dificultad, frecue
 ('გამარჯობა', 'ჩვეულებრივი greet', 'გამარჯობა, როგორ ხარ?', 1, 10, '2024-09-09', (SELECT id FROM Idioma WHERE nombre = 'Georgiano')),
 ('სახლი', 'ცხოვრების შენობა', 'ჩვენ დიდ სახლში ვცხოვრობთ.', 1, 9, '2024-09-09', (SELECT id FROM Idioma WHERE nombre = 'Georgiano')),
 ('სიყვარული', 'გრძნობითი გრძნობა', 'სიყვარული მნიშვნელოვანია ცხოვრებაში.', 2, 8, '2024-09-09', (SELECT id FROM Idioma WHERE nombre = 'Georgiano')),
-
 
 -- Armenio
 ('Բարև', 'Սովորական ողջույն', 'Բարև, ինչպես եք?', 1, 10, '2024-09-09', (SELECT id FROM Idioma WHERE nombre = 'Armenio')),

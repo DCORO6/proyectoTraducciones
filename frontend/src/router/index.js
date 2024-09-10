@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PalabrasList from '@/views/PalabrasList.vue'
 import PalabrasForm from '@/views/PalabrasForm.vue'
+import IdiomasList from '@/views/IdiomasList.vue'
+import IdiomasForm from '@/views/IdiomasForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,18 +19,27 @@ const router = createRouter({
       component:PalabrasList
      
     },
+    
     {
-      path: '/palabras-form',
+      path: '/palabras-form/:id?',
       name: 'PalabrasForm',
-      component:PalabrasForm
+      component: PalabrasForm,
+      props: true  
+    },
+
+    {
+      path: '/idiomas',
+      name: 'IdiomasList',
+      component:IdiomasList
      
     },
+
     {
-      path: '/palabras-form/:id',
-      name: 'PalabrasEditForm',
-      component:PalabrasForm
-     
-    }
+      path: '/idiomas-form/:id?',
+      name: 'IdiomasForm',
+      component: IdiomasForm,
+      props: true  
+    },
   ]
 })
 

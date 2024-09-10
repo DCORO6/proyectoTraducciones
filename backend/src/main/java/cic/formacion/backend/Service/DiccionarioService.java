@@ -79,20 +79,31 @@ public class DiccionarioService {
             return palabraRepository.save(palabra);
         });
     }
-
     @Transactional
     public Optional<Palabra> updatePalabra(Long id, Palabra palabraDetails) {
-        return palabraRepository.findById(id).map(palabra -> {
-            palabra.setPalabra(palabraDetails.getPalabra());
-            palabra.setDescripcion(palabraDetails.getDescripcion());
-            palabra.setEjemploUso(palabraDetails.getEjemploUso());
-            palabra.setNivelDificultad(palabraDetails.getNivelDificultad());
-            palabra.setFrecuenciaUso(palabraDetails.getFrecuenciaUso());
-            palabra.setFechaCreacion(palabraDetails.getFechaCreacion());
-            palabra.setIdioma(palabraDetails.getIdioma());
-            return palabraRepository.save(palabra);
+        System.out.println("Palabra Details recibida para actualización: " + palabraDetails);
+        return palabraRepository.findById(id).map(existingPalabra -> {
+            existingPalabra.setPalabra(palabraDetails.getPalabra());
+            existingPalabra.setDescripcion(palabraDetails.getDescripcion());
+            existingPalabra.setEjemploUso(palabraDetails.getEjemploUso());
+            existingPalabra.setNivelDificultad(palabraDetails.getNivelDificultad());
+            existingPalabra.setFrecuenciaUso(palabraDetails.getFrecuenciaUso());
+            existingPalabra.setFechaCreacion(palabraDetails.getFechaCreacion());
+    
+            if (palabraDetails.getIdioma() != null && palabraDetails.getIdioma().getId() != null) {
+                Idioma idioma = idiomaRepository.findById(palabraDetails.getIdioma().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Idioma not found"));
+                existingPalabra.setIdioma(idioma);
+            } else {
+                throw new IllegalArgumentException("Idioma cannot be null");
+            }
+    
+            return palabraRepository.save(existingPalabra);
         });
     }
+    
+
+   
 
     @Transactional
     public void deletePalabra(Long id) {

@@ -4,8 +4,8 @@ public enum Alfabeto {
     LATINO,
     TIBETANO,
     ARMENIO,
-    ARABE,
-    CIRILICO,
+    ÁRABE,       
+    CIRÍLICO,    
     COREANO,
     GEORGIANO
 }

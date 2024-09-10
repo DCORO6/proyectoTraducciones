@@ -11,11 +11,12 @@
             <strong>{{ palabra.palabra }}</strong>
           </div>
           <div class="card-body">
-            <p>{{ palabra.descripcion }}</p>
+            <p class="card-description">{{ palabra.descripcion }}</p>
             <p><small>Dificultad: {{ palabra.nivelDificultad }}, Frecuencia: {{ palabra.frecuenciaUso }}</small></p>
           </div>
           <div class="card-footer">
             <button @click="confirmDelete(palabra)" class="btn-delete">Eliminar</button>
+            <button @click="editPalabra(palabra)" class="btn-edit">Editar</button> 
             <button @click="viewDetails(palabra)" class="btn-details">Ver Detalles</button>
           </div>
         </div>
@@ -39,8 +40,8 @@
         <button @click="closeDetails" class="btn-close">×</button>
         <h2>Detalles</h2>
         <p><strong>Palabra:</strong> {{ selectedPalabra.palabra }}</p>
-        <p><strong>Descripción:</strong> {{ selectedPalabra.descripcion }}</p>
-        <p class="example-box"><strong>Ejemplo de uso:</strong> {{ selectedPalabra.ejemploUso }}</p>
+        <p><strong>Descripción:</strong> <span class="modal-description">{{ selectedPalabra.descripcion }}</span></p>
+        <p class="example-box"><strong>Ejemplo de uso:</strong> <span class="modal-example">{{ selectedPalabra.ejemploUso }}</span></p>
         <p><strong>Nivel de dificultad:</strong> {{ selectedPalabra.nivelDificultad }}</p>
         <p><strong>Frecuencia de uso:</strong> {{ selectedPalabra.frecuenciaUso }}</p>
         <p><strong>Fecha de creación:</strong> {{ selectedPalabra.fechaCreacion }}</p>
@@ -104,6 +105,10 @@ const goToCreateForm = () => {
   router.push({ name: 'PalabrasForm' }); 
 };
 
+const editPalabra = (palabra) => {
+  router.push({ name: 'PalabrasForm', query: { id: palabra.id } });
+};
+
 const viewDetails = (palabra) => {
   selectedPalabra.value = palabra;
   showDetailsModal.value = true;
@@ -136,6 +141,7 @@ onMounted(() => {
   padding: 20px;
   width: 300px;
   transition: transform 0.2s ease-in-out;
+  overflow: hidden; /* Evita que el contenido sobresalga */
 }
 
 .card:hover {
@@ -150,6 +156,14 @@ onMounted(() => {
 
 .card-body {
   font-size: 1rem;
+}
+
+.card-description {
+  overflow: hidden; /* Evita que el texto se desborde */
+  text-overflow: ellipsis; /* Añade '...' si el texto es demasiado largo */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Número de líneas a mostrar */
+  -webkit-box-orient: vertical;
 }
 
 .card-footer {
@@ -186,7 +200,6 @@ onMounted(() => {
   background-color: #0056b3;
 }
 
-/* Estilos para el modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -207,6 +220,8 @@ onMounted(() => {
   width: 400px;
   text-align: left;
   position: relative;
+  max-height: 80vh; /* Limita la altura del modal */
+  overflow-y: auto; /* Añade scroll si el contenido es demasiado largo */
 }
 
 .btn-close {
@@ -222,6 +237,15 @@ onMounted(() => {
 
 .btn-close:hover {
   color: #000;
+}
+
+.modal-description,
+.modal-example {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Ajusta el número de líneas visibles */
+  -webkit-box-orient: vertical;
 }
 
 .example-box {
@@ -282,7 +306,6 @@ onMounted(() => {
   font-size: 1.5rem;
   color: #555;
 }
-
 
 .header {
   display: flex;

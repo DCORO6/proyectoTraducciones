@@ -31,8 +31,9 @@ public class IdiomaController {
     }
 
     @PostMapping
-    public Idioma createIdioma(@RequestBody Idioma idioma) {
-        return diccionarioService.createIdioma(idioma);
+    public ResponseEntity<Idioma> createIdioma(@RequestBody Idioma idioma) {
+        Idioma createdIdioma = diccionarioService.createIdioma(idioma);
+        return ResponseEntity.ok(createdIdioma);
     }
 
     @GetMapping("/{id}")
@@ -42,13 +43,11 @@ public class IdiomaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Idioma> updateIdioma(@PathVariable Long id, @RequestBody Idioma idioma) {
         if (!diccionarioService.existsIdiomaById(id)) {
             return ResponseEntity.notFound().build();
         }
-
         Idioma updatedIdioma = diccionarioService.updateIdioma(id, idioma);
         return ResponseEntity.ok(updatedIdioma);
     }
@@ -63,5 +62,4 @@ public class IdiomaController {
         }
     }
 }
-
 
