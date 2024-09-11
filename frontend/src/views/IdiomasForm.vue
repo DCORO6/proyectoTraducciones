@@ -33,7 +33,7 @@
     </div>
     <div class="form-buttons">
       <button type="submit" class="btn-submit">
-        {{ isEditMode ? 'Actualizar Idioma' : 'Agregar Idioma' }}
+        {{ isEditMode ? 'Actualizar' : 'Agregar' }}
       </button>
       <button type="button" class="btn-back" @click="goBack">Volver</button>
     </div>
