@@ -4,7 +4,7 @@
         <img src="@/assets/img/paiseslogo.png" alt="Idiomas" class="header-image" />
        
   <button @click="goToCreateForm" class="btn-create">
-    <img src="@/assets/img/aniadir.png" alt="Crear" />
+    <img src="@/assets/img/aniadir.png" alt="Crear" title="Crear idioma"/>
   </button>
   </div>
       <div v-if="loading" class="loading">Cargando...</div>
@@ -20,14 +20,14 @@
             <div class="card-footer">
             
             <button @click="editIdioma(idioma)" class="btn btn-edit">
-              <img src="@/assets/img/editar.png" alt="Editar" />
+              <img src="@/assets/img/editar.png" alt="Editar" title="Editar idioma"/>
             
             </button>
             <button @click="viewDetails(idioma)" class="btn btn-details">
-              <img src="@/assets/img/ver.png" alt="Ver detalles" />
+              <img src="@/assets/img/ver.png" alt="Ver detalles" title="Ver detalles" />
             </button>
             <button @click="confirmDelete(idioma)" class="btn btn-delete">
-              <img src="@/assets/img/eliminar.png" alt="Eliminar" />
+              <img src="@/assets/img/eliminar.png" alt="Eliminar" title="Eliminar idioma"/>
             </button>
           </div>
           </div>

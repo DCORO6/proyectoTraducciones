@@ -47,8 +47,7 @@ public class Palabra {
 
     
 
-    public String getTexto() { return palabra; }
-    public void setTexto(String texto) { this.palabra = texto; }
+    
 
     public Idioma getIdioma() { return idioma; }
     public void setIdioma(Idioma idioma) { this.idioma = idioma; }

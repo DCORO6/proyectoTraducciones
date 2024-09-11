@@ -16,12 +16,12 @@
     <div class="form-group">
       <label for="nivelDificultad">Nivel de dificultad (0-10):</label>
       <input type="number" id="nivelDificultad" v-model.number="formData.nivelDificultad" min="0" max="10" required
-      class="form-control numeric-right small-input" />
+        class="form-control numeric-right small-input" />
     </div>
     <div class="form-group">
       <label for="frecuenciaUso">Frecuencia de uso (0-10):</label>
       <input type="number" id="frecuenciaUso" v-model.number="formData.frecuenciaUso" min="0" max="10" required
-  class="form-control numeric-right small-input" />
+        class="form-control numeric-right small-input" />
     </div>
     <div class="form-group">
       <label for="fechaCreacion">Fecha de creación:</label>
@@ -37,6 +37,7 @@
         </option>
       </select>
 
+
     </div>
     <div class="form-buttons">
       <button type="submit" class="btn-submit">
@@ -48,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import {ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
@@ -102,6 +103,11 @@ const loadPalabraDetails = async (id) => {
 };
 
 const handleSubmit = () => {
+
+  console.log('Datos del formulario antes de enviar:', formData.value); // Verifica aquí
+
+
+
   if (!formData.value.idiomaId) {
     toast.error('Por favor selecciona un idioma.');
     return;
@@ -118,6 +124,8 @@ const handleSubmit = () => {
   }
 
   const palabraData = { ...formData.value };
+  palabraData.idioma = { id: palabraData.idiomaId }; // Asegúrate de que el formato es correcto para el backend
+
   const id = route.query.id || route.params.id;
 
   if (isEditMode.value) {
@@ -191,6 +199,7 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 100px;
+ 
 }
 
 .form-group {
@@ -218,7 +227,7 @@ onMounted(() => {
   max-height: 80px;
 }
 
-.form-group .numeric-right{
+.form-group .numeric-right {
   width: 15%;
 
 }
@@ -226,7 +235,7 @@ onMounted(() => {
 .small-input {
   font-size: 14px;
   padding: 6px;
-  
+
 }
 
 .form-group .form-control[readonly] {

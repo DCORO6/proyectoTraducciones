@@ -48,14 +48,22 @@ public class PalabraController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+  
+
     @PutMapping("/{id}")
-    public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabra) {
-        return diccionarioService.updatePalabra(id, palabra)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabra) {
+    if (!diccionarioService.existsPalabraById(id)) {
+        return ResponseEntity.notFound().build();
     }
-    
-    
+
+    if (palabra.getIdioma() == null || palabra.getIdioma().getId() == null) {
+        return ResponseEntity.badRequest().body(null);
+    }
+
+    Palabra updatedPalabra = diccionarioService.updatePalabra(id, palabra);
+    return ResponseEntity.ok(updatedPalabra);
+}
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePalabra(@PathVariable Long id) {
@@ -67,12 +75,11 @@ public class PalabraController {
         }
     }
 
-
     @GetMapping("/random")
     public ResponseEntity<Palabra> getRandomPalabra() {
         return diccionarioService.getRandomPalabra()
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }
-    
+
 }

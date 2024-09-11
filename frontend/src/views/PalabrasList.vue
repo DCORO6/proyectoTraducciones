@@ -9,7 +9,7 @@
         </option>
       </select>
   <button @click="goToCreateForm" class="btn-create">
-    <img src="@/assets/img/aniadir.png" alt="Crear" />
+    <img src="@/assets/img/aniadir.png" alt="Crear" title="Crear palabra" />
   </button>
   </div>
     <div v-if="loading" class="loading">Cargando...</div>
@@ -26,14 +26,14 @@
           <div class="card-footer">
             
             <button @click="editPalabra(palabra)" class="btn btn-edit">
-              <img src="@/assets/img/editar.png" alt="Editar" />
+              <img src="@/assets/img/editar.png" alt="Editar" title="Editar palabra"/>
             
             </button>
             <button @click="viewDetails(palabra)" class="btn btn-details">
-              <img src="@/assets/img/ver.png" alt="Ver detalles" />
+              <img src="@/assets/img/ver.png" alt="Ver detalles" title="Ver detalles" />
             </button>
             <button @click="confirmDelete(palabra)" class="btn btn-delete">
-              <img src="@/assets/img/eliminar.png" alt="Eliminar" />
+              <img src="@/assets/img/eliminar.png" alt="Eliminar" title="Eliminar palabra"/>
             </button>
           </div>
         </div>
@@ -143,7 +143,7 @@ const goToCreateForm = () => {
 };
 
 const editPalabra = (palabra) => {
-  router.push({ name: 'PalabrasForm', query: { id: palabra.id } });
+  router.push({ name: 'PalabrasForm', params: { id: palabra.id } });
 };
 
 const viewDetails = (palabra) => {

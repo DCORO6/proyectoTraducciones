@@ -5,6 +5,7 @@ import PalabrasForm from '@/views/PalabrasForm.vue'
 import IdiomasList from '@/views/IdiomasList.vue'
 import IdiomasForm from '@/views/IdiomasForm.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,7 +41,8 @@ const router = createRouter({
       component: IdiomasForm,
       props: true  
     },
-    
+
+   
   ]
 })
 

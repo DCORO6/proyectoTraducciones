@@ -34,7 +34,6 @@ public class DiccionarioService {
         return idiomaRepository.findById(id);
     }
 
-
     @Transactional
     public Idioma createIdioma(Idioma idioma) {
         return idiomaRepository.save(idioma);
@@ -82,22 +81,31 @@ public class DiccionarioService {
     }
 
     @Transactional
-    public Optional<Palabra> updatePalabra(Long id, Palabra updatedPalabra) {
+    public Palabra updatePalabra(Long id, Palabra updatedPalabra) {
         return palabraRepository.findById(id).map(existingPalabra -> {
-            existingPalabra.setTexto(updatedPalabra.getTexto());
+            // Actualizar el nombre de la palabra
+            existingPalabra.setPalabra(updatedPalabra.getPalabra());
+
+            // Actualizar otros campos
             existingPalabra.setDescripcion(updatedPalabra.getDescripcion());
             existingPalabra.setEjemploUso(updatedPalabra.getEjemploUso());
             existingPalabra.setNivelDificultad(updatedPalabra.getNivelDificultad());
             existingPalabra.setFrecuenciaUso(updatedPalabra.getFrecuenciaUso());
             existingPalabra.setFechaCreacion(updatedPalabra.getFechaCreacion());
-    
+
+            // Actualizar el idioma
             Optional<Idioma> idioma = idiomaRepository.findById(updatedPalabra.getIdioma().getId());
-            idioma.ifPresent(existingPalabra::setIdioma);
-    
+            if (idioma.isPresent()) {
+                existingPalabra.setIdioma(idioma.get());
+            } else {
+                throw new EntityNotFoundException("Idioma not found");
+            }
+
+            // Guardar cambios
             return palabraRepository.save(existingPalabra);
-        });
+        }).orElseThrow(() -> new EntityNotFoundException("Palabra not found"));
     }
-    
+
     @Transactional(readOnly = true)
     public Optional<Palabra> getRandomPalabra() {
         List<Palabra> palabras = palabraRepository.findAll();
@@ -107,10 +115,6 @@ public class DiccionarioService {
         int randomIndex = (int) (Math.random() * palabras.size());
         return Optional.of(palabras.get(randomIndex));
     }
-    
-    
-
-   
 
     @Transactional
     public void deletePalabra(Long id) {

@@ -96,9 +96,9 @@ public class DiccionarioServiceTest {
     @Test
     void testGetAllPalabras() {
         Palabra palabra1 = new Palabra();
-        palabra1.setTexto("Hola");
+        palabra1.setPalabra("Hola");
         Palabra palabra2 = new Palabra();
-        palabra2.setTexto("Mundo");
+        palabra2.setPalabra("Mundo");
 
         when(palabraRepository.findAll()).thenReturn(Arrays.asList(palabra1, palabra2));
 
@@ -110,13 +110,13 @@ public class DiccionarioServiceTest {
     void testGetPalabraById() {
         Palabra palabra = new Palabra();
         palabra.setId(1L);
-        palabra.setTexto("Salud");
+        palabra.setPalabra("Salud");
 
         when(palabraRepository.findById(1L)).thenReturn(Optional.of(palabra));
 
         Optional<Palabra> foundPalabra = diccionarioService.getPalabraById(1L);
         assertTrue(foundPalabra.isPresent());
-        assertEquals("Salud", foundPalabra.get().getTexto());
+        assertEquals("Salud", foundPalabra.get().getPalabra());
         verify(palabraRepository, times(1)).findById(1L);
     }
 
@@ -125,14 +125,14 @@ public class DiccionarioServiceTest {
         Idioma idioma = new Idioma();
         idioma.setId(1L);
         Palabra palabra = new Palabra();
-        palabra.setTexto("Libro");
+        palabra.setPalabra("Libro");
 
         when(idiomaRepository.findById(1L)).thenReturn(Optional.of(idioma));
         when(palabraRepository.save(palabra)).thenReturn(palabra);
 
         Optional<Palabra> savedPalabra = diccionarioService.createPalabra(1L, palabra);
         assertTrue(savedPalabra.isPresent());
-        assertEquals("Libro", savedPalabra.get().getTexto());
+        assertEquals("Libro", savedPalabra.get().getPalabra());
         verify(idiomaRepository, times(1)).findById(1L);
         verify(palabraRepository, times(1)).save(palabra);
     }
@@ -187,44 +187,53 @@ public class DiccionarioServiceTest {
     }
 
     @Test
-void testUpdatePalabra() {
-    Palabra existingPalabra = new Palabra();
-    existingPalabra.setId(1L);
-    existingPalabra.setPalabra("Hola");
-    existingPalabra.setDescripcion("Saludo en español");
-    existingPalabra.setEjemploUso("Hola, ¿cómo estás?");
-    existingPalabra.setNivelDificultad(1);
-    existingPalabra.setFrecuenciaUso(10);
-    existingPalabra.setFechaCreacion("10.02-2023");
-    Idioma idioma = new Idioma();
-    idioma.setId(1L);
-    existingPalabra.setIdioma(idioma);
+    void testUpdatePalabra() {
+        // Preparar datos
+        Idioma idioma = new Idioma();
+        idioma.setId(1L);
 
-    Palabra updatedPalabraDetails = new Palabra();
-    updatedPalabraDetails.setPalabra("Hola Actualizado");
-    updatedPalabraDetails.setDescripcion("Saludo en español actualizado");
-    updatedPalabraDetails.setEjemploUso("Hola, ¿cómo estás? Actualizado");
-    updatedPalabraDetails.setNivelDificultad(2);
-    updatedPalabraDetails.setFrecuenciaUso(9);
-   updatedPalabraDetails.setFechaCreacion("10-02-2023");
-    updatedPalabraDetails.setIdioma(idioma);
+        Palabra existingPalabra = new Palabra();
+        existingPalabra.setId(1L);
+        existingPalabra.setPalabra("Hola");
+        existingPalabra.setDescripcion("Saludo en español");
+        existingPalabra.setEjemploUso("Hola, ¿cómo estás?");
+        existingPalabra.setNivelDificultad(1);
+        existingPalabra.setFrecuenciaUso(10);
+        existingPalabra.setFechaCreacion("10-02-2023");
+        existingPalabra.setIdioma(idioma);
 
-    when(palabraRepository.findById(1L)).thenReturn(Optional.of(existingPalabra));
-    when(palabraRepository.save(existingPalabra)).thenReturn(existingPalabra);
+        Palabra updatedPalabraDetails = new Palabra();
+        updatedPalabraDetails.setPalabra("Hola Actualizado");
+        updatedPalabraDetails.setDescripcion("Saludo en español actualizado");
+        updatedPalabraDetails.setEjemploUso("Hola, ¿cómo estás? Actualizado");
+        updatedPalabraDetails.setNivelDificultad(2);
+        updatedPalabraDetails.setFrecuenciaUso(9);
+        updatedPalabraDetails.setFechaCreacion("10-02-2023");
+        updatedPalabraDetails.setIdioma(idioma);
 
-    Optional<Palabra> updatedPalabra = diccionarioService.updatePalabra(1L, updatedPalabraDetails);
+        // Configurar mocks
+        when(palabraRepository.findById(1L)).thenReturn(Optional.of(existingPalabra));
+        when(idiomaRepository.findById(1L)).thenReturn(Optional.of(idioma));
+        when(palabraRepository.save(existingPalabra)).thenReturn(existingPalabra);
 
-    assertTrue(updatedPalabra.isPresent());
-    assertEquals("Hola Actualizado", updatedPalabra.get().getPalabra());
-    assertEquals("Saludo en español actualizado", updatedPalabra.get().getDescripcion());
-    assertEquals("Hola, ¿cómo estás? Actualizado", updatedPalabra.get().getEjemploUso());
-    assertEquals(2, updatedPalabra.get().getNivelDificultad());
-    assertEquals(9, updatedPalabra.get().getFrecuenciaUso());
-    assertEquals("10-02-2023", updatedPalabra.get().getFechaCreacion());
-    assertEquals(idioma, updatedPalabra.get().getIdioma());
+        // Ejecutar el método bajo prueba
+        Palabra updatedPalabra = diccionarioService.updatePalabra(1L, updatedPalabraDetails);
 
-    verify(palabraRepository, times(1)).findById(1L);
-    verify(palabraRepository, times(1)).save(existingPalabra);
-}
+        // Verificar resultados
+        assertNotNull(updatedPalabra);
+        assertEquals("Hola Actualizado", updatedPalabra.getPalabra());
+        assertEquals("Saludo en español actualizado", updatedPalabra.getDescripcion());
+        assertEquals("Hola, ¿cómo estás? Actualizado", updatedPalabra.getEjemploUso());
+        assertEquals(2, updatedPalabra.getNivelDificultad());
+        assertEquals(9, updatedPalabra.getFrecuenciaUso());
+        assertEquals("10-02-2023", updatedPalabra.getFechaCreacion());
+        assertEquals(idioma, updatedPalabra.getIdioma());
+
+        // Verificar interacciones con los mocks
+        verify(palabraRepository, times(1)).findById(1L);
+        verify(idiomaRepository, times(1)).findById(1L);
+        verify(palabraRepository, times(1)).save(existingPalabra);
+    }
+
 }
 
