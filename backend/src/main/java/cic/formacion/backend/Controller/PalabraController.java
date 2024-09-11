@@ -2,6 +2,7 @@ package cic.formacion.backend.Controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,24 +49,12 @@ public class PalabraController {
     }
 
     @PutMapping("/{id}")
-public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabraDetails) {
-    if (!diccionarioService.existsPalabraById(id)) {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabra) {
+        return diccionarioService.updatePalabra(id, palabra)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-
-    // Fetch the Idioma based on idiomaId from palabraDetails
-    if (palabraDetails.getIdioma() != null && palabraDetails.getIdioma().getId() != null) {
-        Idioma idioma = diccionarioService.getIdiomaById(palabraDetails.getIdioma().getId())
-            .orElseThrow(() -> new EntityNotFoundException("Idioma not found"));
-        palabraDetails.setIdioma(idioma);
-    }
-
-    Optional<Palabra> updatedPalabra = diccionarioService.updatePalabra(id, palabraDetails);
-    return updatedPalabra
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
-}
-
+    
     
 
     @DeleteMapping("/{id}")
@@ -77,4 +66,13 @@ public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @GetMapping("/random")
+    public ResponseEntity<Palabra> getRandomPalabra() {
+        return diccionarioService.getRandomPalabra()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
+    }
+    
 }

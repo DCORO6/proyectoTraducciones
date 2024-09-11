@@ -151,12 +151,14 @@ onMounted(() => {
 
 <style scoped>
 .add-idioma-form {
-  max-width: 600px;
+  max-width: 300px;
   margin: auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
+  margin-top: 100px;
+
 }
 
 .form-group {

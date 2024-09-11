@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS idioma;
 DROP TABLE IF EXISTS palabra;
 
-CREATE TABLE Idioma (
+CREATE TABLE idioma (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
     codigo_iso CHAR(3) NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE Idioma (
     region VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Palabra (
+CREATE TABLE palabra (
     id INT AUTO_INCREMENT PRIMARY KEY,
     palabra VARCHAR(100) NOT NULL,
     descripcion VARCHAR(1000),
@@ -17,6 +17,6 @@ CREATE TABLE Palabra (
     nivel_dificultad INT NOT NULL CHECK (nivel_dificultad BETWEEN 0 AND 10),
     frecuencia_uso INT NOT NULL CHECK (frecuencia_uso BETWEEN 0 AND 10),
     fecha_creacion VARCHAR(100) NOT NULL,
-    idioma_id BIGINT NOT NULL,
-    FOREIGN KEY (idioma_id) REFERENCES Idioma(id)
+    idioma_id INT NOT NULL,
+    FOREIGN KEY (idioma_id) REFERENCES idioma(id)
 );

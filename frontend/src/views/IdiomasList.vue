@@ -1,8 +1,12 @@
 <template>
     <div>
       <div class="header">
-        <button @click="goToCreateForm" class="btn-create">Crear Nuevo Idioma</button>
-      </div>
+        <img src="@/assets/img/paiseslogo.png" alt="Idiomas" class="header-image" />
+       
+  <button @click="goToCreateForm" class="btn-create">
+    <img src="@/assets/img/aniadir.png" alt="Crear" />
+  </button>
+  </div>
       <div v-if="loading" class="loading">Cargando...</div>
       <div v-else>
         <div v-if="idiomas.length > 0" class="cards-container">
@@ -11,13 +15,21 @@
               <strong>{{ idioma.nombre }}</strong>
             </div>
             <div class="card-body">
-              <p><small>Código ISO: {{ idioma.codigoIso }}, Alfabeto: {{ formatAlfabeto(idioma.alfabeto) }}, Región: {{ idioma.region }}</small></p>
+              <p><small>Región: {{ idioma.region }}</small></p>
             </div>
             <div class="card-footer">
-              <button @click="confirmDelete(idioma)" class="btn-delete">Eliminar</button>
-              <button @click="editIdioma(idioma)" class="btn-edit">Editar</button>
-              <button @click="viewDetails(idioma)" class="btn-details">Ver Detalles</button>
-            </div>
+            
+            <button @click="editIdioma(idioma)" class="btn btn-edit">
+              <img src="@/assets/img/editar.png" alt="Editar" />
+            
+            </button>
+            <button @click="viewDetails(idioma)" class="btn btn-details">
+              <img src="@/assets/img/ver.png" alt="Ver detalles" />
+            </button>
+            <button @click="confirmDelete(idioma)" class="btn btn-delete">
+              <img src="@/assets/img/eliminar.png" alt="Eliminar" />
+            </button>
+          </div>
           </div>
         </div>
         <p v-else>No hay idiomas disponibles.</p>
@@ -160,38 +172,79 @@
   }
   
   .card-footer {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .btn-delete {
-    background-color: #ff4c4c;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-delete:hover {
-    background-color: #e03e3e;
-  }
-  
-  .btn-details {
-    background-color: #007bff;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .btn-details:hover {
-    background-color: #0056b3;
-  }
+  margin-top: 12px;
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  width: 40px;
+}
+
+.btn img {
+  width: 20px; 
+  height: 20px;
+  margin-right: 6px; 
+}
+
+.btn-delete {
+  background-color: #db8b8a;
+}
+
+.btn-delete:hover {
+  background-color: #e97575;
+}
+
+.btn-edit {
+  background-color: #ff9800;
+}
+
+.btn-edit:hover {
+  background-color: #fb8c00;
+}
+
+.btn-details {
+  background-color: #2196f3;
+}
+
+.btn-details:hover {
+  background-color: #1976d2;
+}
+.btn-create {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  width: 80px; /* Aumentar el ancho para acomodar la imagen y el texto */
+  height: 40px; /* Asegura que el botón tenga suficiente altura */
+  background-color: #28a745; 
+  text-align: center;
+}
+
+.btn-create img {
+  width: 34px; 
+  height: 35px;
+}
+
+
+.btn-create:hover {
+  background-color: #218838; /* Color de fondo cuando el cursor está sobre el botón */
+}
   
   .modal-overlay {
     position: fixed;
@@ -266,21 +319,29 @@
   }
   
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  margin-top: 100px;
+}
+
+.header-image {
+  width: 60px; 
+  height: 50px; 
+}
   
   .btn-create {
-    background-color: #28a745;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
+  background-color: #28a745;
+  border: none;
+  padding: 12px 24px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
   
   .btn-create:hover {
     background-color: #218838;

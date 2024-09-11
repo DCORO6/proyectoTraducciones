@@ -2,6 +2,7 @@ package cic.formacion.backend.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,28 +80,34 @@ public class DiccionarioService {
             return palabraRepository.save(palabra);
         });
     }
+
     @Transactional
-    public Optional<Palabra> updatePalabra(Long id, Palabra palabraDetails) {
-        System.out.println("Palabra Details recibida para actualización: " + palabraDetails);
+    public Optional<Palabra> updatePalabra(Long id, Palabra updatedPalabra) {
         return palabraRepository.findById(id).map(existingPalabra -> {
-            existingPalabra.setPalabra(palabraDetails.getPalabra());
-            existingPalabra.setDescripcion(palabraDetails.getDescripcion());
-            existingPalabra.setEjemploUso(palabraDetails.getEjemploUso());
-            existingPalabra.setNivelDificultad(palabraDetails.getNivelDificultad());
-            existingPalabra.setFrecuenciaUso(palabraDetails.getFrecuenciaUso());
-            existingPalabra.setFechaCreacion(palabraDetails.getFechaCreacion());
+            existingPalabra.setTexto(updatedPalabra.getTexto());
+            existingPalabra.setDescripcion(updatedPalabra.getDescripcion());
+            existingPalabra.setEjemploUso(updatedPalabra.getEjemploUso());
+            existingPalabra.setNivelDificultad(updatedPalabra.getNivelDificultad());
+            existingPalabra.setFrecuenciaUso(updatedPalabra.getFrecuenciaUso());
+            existingPalabra.setFechaCreacion(updatedPalabra.getFechaCreacion());
     
-            if (palabraDetails.getIdioma() != null && palabraDetails.getIdioma().getId() != null) {
-                Idioma idioma = idiomaRepository.findById(palabraDetails.getIdioma().getId())
-                        .orElseThrow(() -> new EntityNotFoundException("Idioma not found"));
-                existingPalabra.setIdioma(idioma);
-            } else {
-                throw new IllegalArgumentException("Idioma cannot be null");
-            }
+            Optional<Idioma> idioma = idiomaRepository.findById(updatedPalabra.getIdioma().getId());
+            idioma.ifPresent(existingPalabra::setIdioma);
     
             return palabraRepository.save(existingPalabra);
         });
     }
+    
+    @Transactional(readOnly = true)
+    public Optional<Palabra> getRandomPalabra() {
+        List<Palabra> palabras = palabraRepository.findAll();
+        if (palabras.isEmpty()) {
+            return Optional.empty();
+        }
+        int randomIndex = (int) (Math.random() * palabras.size());
+        return Optional.of(palabras.get(randomIndex));
+    }
+    
     
 
    

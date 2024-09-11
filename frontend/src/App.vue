@@ -1,16 +1,11 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <header>
-
     <div class="wrapper">
+      <img src="@/assets/img//diccionario.ico" alt="Diccionario" class="logo" />
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/">Inicio</RouterLink>
+        <RouterLink to="/idiomas">Idiomas</RouterLink>
         <RouterLink to="/palabras">Palabras</RouterLink>
-        <RouterLink to="/Idiomas">Idiomas</RouterLink>
-
       </nav>
     </div>
   </header>
@@ -20,64 +15,67 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped>
 header {
+  background-color: #333; 
+  color: #fff; 
   line-height: 1.5;
   max-height: 100vh;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  z-index: 1000; 
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center; /* Alinear verticalmente la imagen y el nav */
+  width: 100%;
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
+  width: 40px; /* Ajusta el tamaño del ícono */
+  height: auto; /* Mantener la proporción de la imagen */
+  margin-right: 1rem; /* Espacio entre el ícono y el nav */
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente los enlaces */
+  align-items: center;
+  flex-grow: 1; /* Permite que el nav ocupe el espacio disponible */
+  font-size: 14px;
+  padding: 1rem;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  color: #fff; 
+  text-decoration: none; 
+  padding: 0.5rem 1rem;
+  border-radius: 5px; 
+  margin: 0 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-nav a:first-of-type {
-  border: 0;
+nav a:hover {
+  background-color: #555; 
+  color: #fff; 
+}
+
+nav a.router-link-exact-active {
+  background-color: #888888; 
 }
 
 @media (min-width: 1024px) {
   header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+    padding: 0 2rem; 
   }
 
   nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+    font-size: 16px; 
+    padding: 1rem 2rem; 
   }
 }
 </style>

@@ -40,6 +40,7 @@ const router = createRouter({
       component: IdiomasForm,
       props: true  
     },
+    
   ]
 })
 

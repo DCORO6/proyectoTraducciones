@@ -1,8 +1,17 @@
 <template>
   <div>
-    <div class="header">
-      <button @click="goToCreateForm" class="btn-create">Crear Nueva Palabra</button>
-    </div>
+      <div class="header">
+        <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" />
+        <select v-model="selectedIdioma" @change="filterByIdioma" class="language-select">
+        <option value="">Todos los idiomas</option>
+        <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
+          {{ idioma.nombre }}
+        </option>
+      </select>
+  <button @click="goToCreateForm" class="btn-create">
+    <img src="@/assets/img/aniadir.png" alt="Crear" />
+  </button>
+  </div>
     <div v-if="loading" class="loading">Cargando...</div>
     <div v-else>
       <div v-if="palabras.length > 0" class="cards-container">
@@ -15,13 +24,21 @@
             <p><small>Dificultad: {{ palabra.nivelDificultad }}, Frecuencia: {{ palabra.frecuenciaUso }}</small></p>
           </div>
           <div class="card-footer">
-            <button @click="confirmDelete(palabra)" class="btn-delete">Eliminar</button>
-            <button @click="editPalabra(palabra)" class="btn-edit">Editar</button> 
-            <button @click="viewDetails(palabra)" class="btn-details">Ver Detalles</button>
+            
+            <button @click="editPalabra(palabra)" class="btn btn-edit">
+              <img src="@/assets/img/editar.png" alt="Editar" />
+            
+            </button>
+            <button @click="viewDetails(palabra)" class="btn btn-details">
+              <img src="@/assets/img/ver.png" alt="Ver detalles" />
+            </button>
+            <button @click="confirmDelete(palabra)" class="btn btn-delete">
+              <img src="@/assets/img/eliminar.png" alt="Eliminar" />
+            </button>
           </div>
         </div>
       </div>
-      <p v-else>No hay palabras disponibles.</p>
+      <p v-else style="margin-left: 10px;">No hay palabras disponibles.</p>
     </div>
 
     <!-- Modal de confirmación -->
@@ -51,6 +68,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from '@/axios';
@@ -61,11 +79,13 @@ const router = useRouter();
 const toast = useToast();
 
 const palabras = ref([]);
+const idiomas = ref([]);
 const loading = ref(true);
 const showModal = ref(false);
 const showDetailsModal = ref(false);
 const palabraAEliminar = ref(null);
 const selectedPalabra = ref(null);
+const selectedIdioma = ref('');
 
 const fetchPalabras = async () => {
   try {
@@ -75,6 +95,23 @@ const fetchPalabras = async () => {
     console.error("Error al cargar palabras:", error);
   } finally {
     loading.value = false;
+  }
+};
+
+const fetchIdiomas = async () => {
+  try {
+    const response = await axios.get('/api/idiomas');
+    idiomas.value = response.data;
+  } catch (error) {
+    console.error("Error al cargar idiomas:", error);
+  }
+};
+
+const filterByIdioma = () => {
+  if (selectedIdioma.value) {
+    palabras.value = palabras.value.filter(palabra => palabra.idioma.id === selectedIdioma.value);
+  } else {
+    fetchPalabras(); 
   }
 };
 
@@ -121,84 +158,130 @@ const closeDetails = () => {
 
 onMounted(() => {
   fetchPalabras();
+  fetchIdiomas(); // Cargar la lista de idiomas
 });
 </script>
+
 
 <style scoped>
 .cards-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
   justify-content: center;
   margin: 20px;
 }
 
 .card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: #f5f4f4;
+  border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
-  transition: transform 0.2s ease-in-out;
-  overflow: hidden; /* Evita que el contenido sobresalga */
+  padding: 10px;
+  width: 300px; /* Hacer la tarjeta más alargada */
+  height: 100%; /* Hacer la tarjeta más alta */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
 .card-body {
-  font-size: 1rem;
+  font-size: 0.85rem; /* Reducir el tamaño del texto en la tarjeta */
+  color: #555;
 }
 
 .card-description {
-  overflow: hidden; /* Evita que el texto se desborde */
-  text-overflow: ellipsis; /* Añade '...' si el texto es demasiado largo */
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Número de líneas a mostrar */
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
-
 .card-footer {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
-  justify-content: space-between;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  width: 40px;
+}
+
+.btn img {
+  width: 20px; /* Ajusta el tamaño de las imágenes */
+  height: 20px;
+  margin-right: 6px; /* Espacio entre la imagen y el texto */
 }
 
 .btn-delete {
-  background-color: #ff4c4c;
-  border: none;
-  padding: 10px 20px;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  background-color: #db8b8a;
 }
 
 .btn-delete:hover {
-  background-color: #e03e3e;
+  background-color: #e97575;
+}
+
+.btn-edit {
+  background-color: #ff9800;
+}
+
+.btn-edit:hover {
+  background-color: #fb8c00;
 }
 
 .btn-details {
-  background-color: #007bff;
-  border: none;
-  padding: 10px 20px;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  background-color: #2196f3;
 }
 
 .btn-details:hover {
-  background-color: #0056b3;
+  background-color: #1976d2;
 }
+.btn-create {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  width: 80px; /* Aumentar el ancho para acomodar la imagen y el texto */
+  height: 40px; /* Asegura que el botón tenga suficiente altura */
+  background-color: #28a745; 
+  text-align: center;
+}
+
+.btn-create img {
+  width: 34px; 
+  height: 35px;
+}
+
+
+.btn-create:hover {
+  background-color: #218838; /* Color de fondo cuando el cursor está sobre el botón */
+}
+
 
 .modal-overlay {
   position: fixed;
@@ -206,22 +289,22 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 400px;
-  text-align: left;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 600px;
   position: relative;
-  max-height: 80vh; /* Limita la altura del modal */
-  overflow-y: auto; /* Añade scroll si el contenido es demasiado largo */
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .btn-close {
@@ -239,43 +322,41 @@ onMounted(() => {
   color: #000;
 }
 
-.modal-description,
-.modal-example {
+.modal-description, .modal-example {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* Ajusta el número de líneas visibles */
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
 }
 
 .example-box {
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   padding: 10px;
-  background-color: #f9f9f9;
+  background-color: #f1f1f1;
   margin-top: 10px;
-  margin-bottom: 10px;
 }
 
 .btn-confirm {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin-right: 10px;
+  padding: 8px 16px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .btn-cancel {
   background-color: #f44336;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 16px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
 }
 
 .btn-confirm:hover {
@@ -290,10 +371,10 @@ onMounted(() => {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 16px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
   margin-top: 10px;
 }
 
@@ -304,7 +385,7 @@ onMounted(() => {
 .loading {
   text-align: center;
   font-size: 1.5rem;
-  color: #555;
+  color: #666;
 }
 
 .header {
@@ -312,20 +393,11 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin: 20px;
+  margin-top: 100px;
 }
 
-.btn-create {
-  background-color: #28a745;
-  border: none;
-  padding: 10px 20px;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+.header-image {
+  width: 40px; 
+  height: 40px; 
 }
-
-.btn-create:hover {
-  background-color: #218838;
-}
-
 </style>
