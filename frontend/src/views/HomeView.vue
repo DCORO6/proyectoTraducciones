@@ -10,8 +10,8 @@
         <p><strong>Ejemplo de uso:</strong> {{ randomWord.ejemploUso }}</p>
       </div>
       <div class="button-container">
-        <button @click="goToPalabrasList" class="btn">Ver Lista de Palabras</button>
         <button @click="goToIdiomasList" class="btn">Ver Lista de Idiomas</button>
+        <button @click="goToPalabrasList" class="btn">Ver Lista de Palabras</button>
       </div>
     </div>
   </div>

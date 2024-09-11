@@ -44,9 +44,11 @@
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
+import { useToast } from 'vue-toast-notification';
 
 const router = useRouter();
 const route = useRoute();
+const toast = useToast();
 
 const isEditMode = ref(false);
 
@@ -57,7 +59,6 @@ const formData = ref({
   region: ''
 });
 
-// Lista de alfabetos en mayúsculas
 const alfabetos = ref([
   'LATINO',
   'TIBETANO',
@@ -68,13 +69,11 @@ const alfabetos = ref([
   'GEORGIANO'
 ]);
 
-// Función para formatear el alfabeto
 const formatAlfabeto = (alfabeto) => {
   const lowerCase = alfabeto.toLowerCase();
   return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
 };
 
-// Computed property para obtener los alfabetos formateados
 const formattedAlfabetos = computed(() => {
   return alfabetos.value.map(alfabeto => ({
     value: alfabeto,
@@ -82,7 +81,6 @@ const formattedAlfabetos = computed(() => {
   }));
 });
 
-// Valida el campo de código ISO
 const isCodigoIsoValid = computed(() => {
   const codigoIso = formData.value.codigoIso.trim();
   return /^[A-Za-z]{3}$/.test(codigoIso);
@@ -100,6 +98,7 @@ const loadIdiomaDetails = async (id) => {
     };
   } catch (error) {
     console.error('Error al cargar el idioma:', error);
+    toast.error('Error al cargar los detalles del idioma');
   }
 };
 
@@ -114,16 +113,24 @@ const handleSubmit = () => {
   if (isEditMode.value) {
     axios.put(`/api/idiomas/${id}`, idiomaData)
       .then(() => {
+        toast.success('Idioma actualizado exitosamente');
         router.push('/idiomas');
       })
-      .catch(error => console.error('Error al actualizar idioma:', error));
+      .catch(error => {
+        console.error('Error al actualizar idioma:', error);
+        toast.error('Error al actualizar el idioma');
+      });
   } else {
     axios.post('/api/idiomas', idiomaData)
       .then(() => {
+        toast.success('Idioma agregado exitosamente');
         router.push('/idiomas');
         resetForm();
       })
-      .catch(error => console.error('Error al crear idioma:', error));
+      .catch(error => {
+        console.error('Error al crear idioma:', error);
+        toast.error('Error al agregar el idioma');
+      });
   }
 };
 
