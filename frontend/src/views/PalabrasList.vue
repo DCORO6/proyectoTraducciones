@@ -129,10 +129,10 @@ const deletePalabra = async () => {
   try {
     await axios.delete(`/api/palabras/${palabraAEliminar.value.id}`);
     palabras.value = palabras.value.filter(p => p.id !== palabraAEliminar.value.id);
-    toast.success("Palabra eliminada correctamente");
+    toast.success("Palabra "+ palabraAEliminar.value.palabra +" eliminada correctamente");
   } catch (error) {
     console.error("Error al eliminar palabra:", error);
-    toast.error("Error al eliminar la palabra");
+    toast.error("Error al eliminar la palabra "+ palabraAEliminar.value.palabra);
   } finally {
     cancelDelete();
   }

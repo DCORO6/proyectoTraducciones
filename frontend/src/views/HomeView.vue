@@ -1,8 +1,8 @@
 <template>
   <div class="home-page">
     <div class="welcome-section">
-      <h1>¡Bienvenido a nuestro diccionario!</h1>
-      <p>Descubre y explora palabras e idiomas.</p>
+      <h1>¡Bienvenido a tu diccionario!</h1>
+      <p>Aquí podrás gestionar idiomas y palabras que quieres que aparezcan en este.</p>
       <div v-if="randomWord" class="random-word-container">
         <p class="random-word-title">Palabra del día:</p>
         <p><strong>Nombre:</strong> {{ randomWord.palabra }}</p>
@@ -79,7 +79,7 @@ onMounted(() => {
 
 <style scoped>
 .home-page {
-  background-image: url('@/assets/img/fondo.png'); /* Asegúrate de tener esta imagen en la carpeta correcta */
+  background-image: url('@/assets/img/fondo.png');
   background-size: cover;
   background-position: center;
   color: #fff;
@@ -91,7 +91,7 @@ onMounted(() => {
 }
 
 .welcome-section {
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente para mejorar la legibilidad */
+  background-color: rgba(0, 0, 0, 0.6); 
   padding: 20px;
   border-radius: 10px;
   max-width: 500px;
@@ -108,7 +108,7 @@ onMounted(() => {
 }
 
 .random-word-container {
-  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente para diferenciar la sección */
+  background-color: rgba(255, 255, 255, 0.1); 
   padding: 10px;
   border-radius: 5px;
   margin-top: 20px;

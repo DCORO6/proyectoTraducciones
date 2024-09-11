@@ -1,55 +1,57 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="add-palabra-form">
-    <div class="form-group">
-      <label for="palabra">Palabra:</label>
-      <input type="text" id="palabra" v-model="formData.palabra" maxlength="30" required class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="descripcion">Descripción:</label>
-      <textarea id="descripcion" v-model="formData.descripcion" maxlength="500" class="form-control"
-        required></textarea>
-    </div>
-    <div class="form-group">
-      <label for="ejemploUso">Ejemplo de uso:</label>
-      <textarea id="ejemploUso" v-model="formData.ejemploUso" maxlength="500" class="form-control" required></textarea>
-    </div>
-    <div class="form-group">
-      <label for="nivelDificultad">Nivel de dificultad (0-10):</label>
-      <input type="number" id="nivelDificultad" v-model.number="formData.nivelDificultad" min="0" max="10" required
-        class="form-control numeric-right small-input" />
-    </div>
-    <div class="form-group">
-      <label for="frecuenciaUso">Frecuencia de uso (0-10):</label>
-      <input type="number" id="frecuenciaUso" v-model.number="formData.frecuenciaUso" min="0" max="10" required
-        class="form-control numeric-right small-input" />
-    </div>
-    <div class="form-group">
-      <label for="fechaCreacion">Fecha de creación:</label>
-      <input type="text" id="fechaCreacion" :value="formattedFechaCreacion" readonly class="form-control small-input"
-        disabled required />
-    </div>
-    <div class="form-group">
-      <label for="idioma">Idioma:</label>
-      <select id="idioma" v-model.number="formData.idiomaId" required class="form-control">
-        <option value="">Selecciona un idioma</option>
-        <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
-          {{ idioma.nombre }}
-        </option>
-      </select>
+    <form @submit.prevent="handleSubmit" class="add-palabra-form">
+      <div class="form-group">
+        <label for="palabra">Palabra:</label>
+        <input type="text" id="palabra" v-model="formData.palabra" maxlength="30" required class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" v-model="formData.descripcion" maxlength="500" class="form-control"
+          required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="ejemploUso">Ejemplo de uso:</label>
+        <textarea id="ejemploUso" v-model="formData.ejemploUso" maxlength="500" class="form-control"
+          required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="nivelDificultad">Nivel de dificultad (0-10):</label>
+        <input type="number" id="nivelDificultad" v-model.number="formData.nivelDificultad" min="0" max="10" required
+          class="form-control numeric-right small-input" />
+      </div>
+      <div class="form-group">
+        <label for="frecuenciaUso">Frecuencia de uso (0-10):</label>
+        <input type="number" id="frecuenciaUso" v-model.number="formData.frecuenciaUso" min="0" max="10" required
+          class="form-control numeric-right small-input" />
+      </div>
+      <div class="form-group">
+        <label for="fechaCreacion">Fecha de creación:</label>
+        <input type="text" id="fechaCreacion" :value="formattedFechaCreacion" readonly class="form-control small-input"
+          disabled required />
+      </div>
+      <div class="form-group">
+        <label for="idioma">Idioma:</label>
+        <select id="idioma" v-model.number="formData.idiomaId" required class="form-control">
+          <option value="">Selecciona un idioma</option>
+          <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
+            {{ idioma.nombre }}
+          </option>
+        </select>
 
 
-    </div>
-    <div class="form-buttons">
-      <button type="submit" class="btn-submit">
-        {{ isEditMode ? 'Actualizar' : 'Agregar' }}
-      </button>
-      <button type="button" class="btn-back" @click="goBack">Volver</button>
-    </div>
-  </form>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn-submit">
+          {{ isEditMode ? 'Actualizar' : 'Agregar' }}
+        </button>
+        <button type="button" class="btn-back" @click="goBack">Volver</button>
+      </div>
+    </form>
+ 
 </template>
 
 <script setup>
-import {ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
@@ -98,56 +100,39 @@ const loadPalabraDetails = async (id) => {
     };
   } catch (error) {
     console.error('Error al cargar la palabra:', error);
-    toast.error('Error al cargar los detalles de la palabra.');
+    toast.error('Error al cargar los detalles de la palabra: ' + palabra.palabra);
   }
 };
 
 const handleSubmit = () => {
 
-  console.log('Datos del formulario antes de enviar:', formData.value); // Verifica aquí
 
-
-
-  if (!formData.value.idiomaId) {
-    toast.error('Por favor selecciona un idioma.');
-    return;
-  }
-
-  if (formData.value.nivelDificultad < 0 || formData.value.nivelDificultad > 10) {
-    toast.error('El nivel de dificultad debe estar entre 0 y 10.');
-    return;
-  }
-
-  if (formData.value.frecuenciaUso < 0 || formData.value.frecuenciaUso > 10) {
-    toast.error('La frecuencia de uso debe estar entre 0 y 10.');
-    return;
-  }
 
   const palabraData = { ...formData.value };
-  palabraData.idioma = { id: palabraData.idiomaId }; // Asegúrate de que el formato es correcto para el backend
+  palabraData.idioma = { id: palabraData.idiomaId };
 
   const id = route.query.id || route.params.id;
 
   if (isEditMode.value) {
     axios.put(`/api/palabras/${id}`, palabraData)
       .then(() => {
-        toast.success('Palabra actualizada correctamente.');
+        toast.success('Palabra ' + palabraData.palabra + ' actualizada correctamente.');
         router.push('/palabras');
       })
       .catch(error => {
         console.error('Error al actualizar palabra:', error);
-        toast.error('Error al actualizar la palabra.');
+        toast.error('Error al actualizar ' + palabraData.palabra);
       });
   } else {
     axios.post(`/api/palabras/${formData.value.idiomaId}/agregar`, palabraData)
       .then(() => {
-        toast.success('Palabra añadida correctamente.');
+        toast.success('Palabra ' + palabraData.palabra + ' añadida correctamente.');
         router.push('/palabras');
         resetForm();
       })
       .catch(error => {
         console.error('Error al crear palabra:', error);
-        toast.error('Error al añadir la palabra.');
+        toast.error('Error al añadir ' + palabraData.palabra);
       });
   }
 };
@@ -191,6 +176,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+
 .add-palabra-form {
   max-width: 500px;
   margin: auto;
@@ -199,7 +186,7 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 100px;
- 
+
 }
 
 .form-group {

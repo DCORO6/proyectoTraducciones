@@ -1,4 +1,5 @@
 <template>
+  <div class="page-background">
   <form @submit.prevent="handleSubmit" class="add-idioma-form">
     <div class="form-group">
       <label for="nombre">Nombre:</label>
@@ -16,7 +17,6 @@
         maxlength="3"
         minlength="3"
       />
-      <div v-if="!isCodigoIsoValid" class="invalid-feedback">El código ISO debe tener exactamente 3 letras.</div>
     </div>
     <div class="form-group">
       <label for="alfabeto">Alfabeto:</label>
@@ -38,6 +38,7 @@
       <button type="button" class="btn-back" @click="goBack">Volver</button>
     </div>
   </form>
+  </div>
 </template>
 
 <script setup>
@@ -104,32 +105,32 @@ const loadIdiomaDetails = async (id) => {
 
 const handleSubmit = () => {
   if (!isCodigoIsoValid.value) {
-    return; // No envía el formulario si el código ISO no es válido
+    return; 
   }
-
+  formData.value.codigoIso = formData.value.codigoIso.toUpperCase();
   const idiomaData = { ...formData.value };
   const id = route.query.id || route.params.id;
 
   if (isEditMode.value) {
     axios.put(`/api/idiomas/${id}`, idiomaData)
       .then(() => {
-        toast.success('Idioma actualizado exitosamente');
+        toast.success('Idioma '+idiomaData.nombre+' actualizado exitosamente');
         router.push('/idiomas');
       })
       .catch(error => {
         console.error('Error al actualizar idioma:', error);
-        toast.error('Error al actualizar el idioma');
+        toast.error('Error al actualizar el idioma '+ idiomaData.nombre);
       });
   } else {
     axios.post('/api/idiomas', idiomaData)
       .then(() => {
-        toast.success('Idioma agregado exitosamente');
+        toast.success('Idioma '+idiomaData.nombre+' agregado exitosamente');
         router.push('/idiomas');
         resetForm();
       })
       .catch(error => {
         console.error('Error al crear idioma:', error);
-        toast.error('Error al agregar el idioma');
+        toast.error('Error al agregar el idioma '+ idiomaData.nombre);
       });
   }
 };
@@ -164,7 +165,20 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  margin-top: 100px;
+  margin-top: 200px;
+
+}
+
+
+.page-background {
+  background-image: url('@/assets/img/paises.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; 
+  padding: 20px; 
+  
+
 
 }
 
@@ -185,15 +199,6 @@ onMounted(() => {
   border-radius: 4px;
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.invalid-feedback {
-  color: #dc3545;
-  font-size: 0.875em;
-  margin-top: 5px;
-}
 
 .form-buttons {
   display: flex;
