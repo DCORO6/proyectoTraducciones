@@ -125,4 +125,6 @@ public class DiccionarioService {
     public boolean existsPalabraById(Long id) {
         return palabraRepository.existsById(id);
     }
+
+    
 }

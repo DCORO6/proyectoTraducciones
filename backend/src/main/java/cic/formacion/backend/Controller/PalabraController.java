@@ -82,4 +82,5 @@ public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    
 }

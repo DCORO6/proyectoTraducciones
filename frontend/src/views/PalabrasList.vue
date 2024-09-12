@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="header">
-        <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" />
+        <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" title="Icono de la vista de palabras" />
         <select v-model="selectedIdioma" @change="filterByIdioma" class="language-select">
         <option value="">Todos los idiomas</option>
         <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
@@ -55,8 +55,7 @@
     <div v-if="showDetailsModal" class="modal-overlay">
       <div class="modal">
         <button @click="closeDetails" class="btn-close">×</button>
-        <h2>Detalles</h2>
-        <p><strong>Palabra:</strong> {{ selectedPalabra.palabra }}</p>
+        <h2 class="modal-title"> <strong>{{ selectedPalabra.palabra }}</strong></h2>
         <p><strong>Descripción:</strong> <span class="modal-description">{{ selectedPalabra.descripcion }}</span></p>
         <p class="example-box"><strong>Ejemplo de uso:</strong> <span class="modal-example">{{ selectedPalabra.ejemploUso }}</span></p>
         <p><strong>Nivel de dificultad:</strong> {{ selectedPalabra.nivelDificultad }}</p>
@@ -169,6 +168,12 @@ onMounted(() => {
 
 <style scoped>
 
+.modal-title{
+  overflow-wrap: break-word; 
+  word-wrap: break-word; 
+  word-break: break-word; 
+}
+
 strong {
   font-weight: bold;
 }
@@ -186,8 +191,8 @@ strong {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  width: 300px; /* Hacer la tarjeta más alargada */
-  height: 100%; /* Hacer la tarjeta más alta */
+  width: 300px; 
+  height: 100%; 
   max-height: 150px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -208,7 +213,7 @@ strong {
 }
 
 .card-body {
-  font-size: 0.85rem; /* Reducir el tamaño del texto en la tarjeta */
+  font-size: 0.85rem; 
   color: #555;
 }
 
@@ -305,6 +310,10 @@ strong {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2000;
+  overflow-wrap: break-word; 
+  word-wrap: break-word; 
+  word-break: break-word; 
 }
 
 .modal {
@@ -312,11 +321,11 @@ strong {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  width: 80%;
   max-width: 600px;
   position: relative;
   max-height: 80vh;
   overflow-y: auto;
+  z-index: 2001;
 }
 
 .btn-close {
@@ -328,6 +337,7 @@ strong {
   font-size: 1.5rem;
   color: #333;
   cursor: pointer;
+  z-index: 2002;
 }
 
 .btn-close:hover {

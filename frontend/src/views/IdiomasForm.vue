@@ -1,6 +1,8 @@
 <template>
   <div class="page-background">
   <form @submit.prevent="handleSubmit" class="add-idioma-form">
+    <h2 class="title-form">{{ isEditMode ? 'Actualizar idioma' : 'Agregar idioma' }}</h2>
+
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input type="text" id="nombre" v-model="formData.nombre" required class="form-control" maxlength="30"/>
@@ -158,6 +160,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.title-form {
+  text-align: center;
+  margin-bottom: 10px;
+  
+}
+
 .add-idioma-form {
   max-width: 300px;
   margin: auto;
@@ -166,6 +175,8 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 200px;
+  max-height: 80vh; 
+  overflow-y: auto; 
 
 }
 

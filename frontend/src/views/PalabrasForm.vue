@@ -1,6 +1,7 @@
 <template>
     <div class="page-background">
     <form @submit.prevent="handleSubmit" class="add-palabra-form">
+      <h2 class="title-form">{{ isEditMode ? 'Actualizar palabra' : 'Agregar palabra' }}</h2>
       <div class="form-group">
         <label for="palabra">Palabra:</label>
         <input type="text" id="palabra" v-model="formData.palabra" maxlength="30" required class="form-control" />
@@ -178,6 +179,11 @@ onMounted(() => {
 
 <style scoped>
 
+.title-form {
+  text-align: center;
+  margin-bottom: 5px;
+  
+}
 .page-background {
   background-image: url('@/assets/img/book.png');
   background-size: contain;
@@ -198,6 +204,10 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 100px;
+  max-height: 80vh; /* Ajusta según sea necesario */
+  overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura máxima */
+  width: 100%;
+  max-width: 500px;
 
 }
 

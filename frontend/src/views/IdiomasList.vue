@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <img src="@/assets/img/paiseslogo.png" alt="Idiomas" class="header-image" />
+      <img src="@/assets/img/paiseslogo.png" alt="Idiomas" class="header-image" title="Icono de la vista de idiomas" />
 
       <button @click="goToCreateForm" class="btn-create">
         <img src="@/assets/img/aniadir.png" alt="Crear" title="Crear idioma" />
@@ -47,8 +47,7 @@
     <div v-if="showDetailsModal" class="modal-overlay">
       <div class="modal">
         <button @click="closeDetails" class="btn-close">×</button>
-        <h2>Detalles</h2>
-        <p><strong>Nombre:</strong> {{ selectedIdioma.nombre }}</p>
+        <h2><strong>{{ selectedIdioma.nombre }} </strong> </h2>
         <p><strong>Código ISO:</strong> {{ selectedIdioma.codigoIso }}</p>
         <p><strong>Alfabeto:</strong> {{ formatAlfabeto(selectedIdioma.alfabeto) }}</p>
         <p><strong>Región:</strong> {{ selectedIdioma.region }}</p>
@@ -265,6 +264,11 @@ strong {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2000;
+   overflow-wrap: break-word; 
+  word-wrap: break-word; 
+  word-break: break-word; 
+  overflow-y: auto;
 }
 
 .modal {
@@ -276,6 +280,7 @@ strong {
   text-align: left;
   position: relative;
   word-wrap: break-word;
+  z-index: 2001;
 }
 
 .btn-close {
@@ -287,6 +292,7 @@ strong {
   font-size: 1.5rem;
   color: #333;
   cursor: pointer;
+  z-index: 2002;
 }
 
 .btn-close:hover {
