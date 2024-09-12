@@ -27,25 +27,26 @@ header {
   display: flex;
   align-items: center;
   padding: 0 1rem;
+   
 }
 
 .wrapper {
   display: flex;
-  align-items: center; /* Alinear verticalmente la imagen y el nav */
+  align-items: center; 
   width: 100%;
 }
 
 .logo {
-  width: 40px; /* Ajusta el tamaño del ícono */
-  height: auto; /* Mantener la proporción de la imagen */
-  margin-right: 1rem; /* Espacio entre el ícono y el nav */
+  width: 40px; 
+  height: auto; 
+  margin-right: 1rem; 
 }
 
 nav {
   display: flex;
-  justify-content: center; /* Centrar horizontalmente los enlaces */
+  justify-content: center; 
   align-items: center;
-  flex-grow: 1; /* Permite que el nav ocupe el espacio disponible */
+  flex-grow: 1; 
   font-size: 14px;
   padding: 1rem;
 }

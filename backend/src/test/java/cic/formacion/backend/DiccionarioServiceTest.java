@@ -188,7 +188,6 @@ public class DiccionarioServiceTest {
 
     @Test
     void testUpdatePalabra() {
-        // Preparar datos
         Idioma idioma = new Idioma();
         idioma.setId(1L);
 
@@ -211,15 +210,12 @@ public class DiccionarioServiceTest {
         updatedPalabraDetails.setFechaCreacion("10-02-2023");
         updatedPalabraDetails.setIdioma(idioma);
 
-        // Configurar mocks
         when(palabraRepository.findById(1L)).thenReturn(Optional.of(existingPalabra));
         when(idiomaRepository.findById(1L)).thenReturn(Optional.of(idioma));
         when(palabraRepository.save(existingPalabra)).thenReturn(existingPalabra);
 
-        // Ejecutar el método bajo prueba
         Palabra updatedPalabra = diccionarioService.updatePalabra(1L, updatedPalabraDetails);
 
-        // Verificar resultados
         assertNotNull(updatedPalabra);
         assertEquals("Hola Actualizado", updatedPalabra.getPalabra());
         assertEquals("Saludo en español actualizado", updatedPalabra.getDescripcion());
@@ -229,11 +225,77 @@ public class DiccionarioServiceTest {
         assertEquals("10-02-2023", updatedPalabra.getFechaCreacion());
         assertEquals(idioma, updatedPalabra.getIdioma());
 
-        // Verificar interacciones con los mocks
         verify(palabraRepository, times(1)).findById(1L);
         verify(idiomaRepository, times(1)).findById(1L);
         verify(palabraRepository, times(1)).save(existingPalabra);
     }
+
+
+    @Test
+void testGetRandomPalabra() {
+    Palabra palabra1 = new Palabra();
+    palabra1.setPalabra("Hola");
+    Palabra palabra2 = new Palabra();
+    palabra2.setPalabra("Adiós");
+    Palabra palabra3 = new Palabra();
+    palabra3.setPalabra("Mundo");
+
+    when(palabraRepository.findAll()).thenReturn(Arrays.asList(palabra1, palabra2, palabra3));
+
+    Optional<Palabra> randomPalabra = diccionarioService.getRandomPalabra();
+
+    assertTrue(randomPalabra.isPresent());
+    assertTrue(
+        randomPalabra.get().getPalabra().equals("Hola") ||
+        randomPalabra.get().getPalabra().equals("Adiós") ||
+        randomPalabra.get().getPalabra().equals("Mundo")
+    );
+
+    verify(palabraRepository, times(1)).findAll();
+}
+
+@Test
+void testGetRandomPalabraEmptyList() {
+    when(palabraRepository.findAll()).thenReturn(Arrays.asList());
+
+    Optional<Palabra> randomPalabra = diccionarioService.getRandomPalabra();
+
+    assertFalse(randomPalabra.isPresent());
+
+    verify(palabraRepository, times(1)).findAll();
+}
+
+@Test
+void testSearchPalabrasByName() {
+    Palabra palabra1 = new Palabra();
+    palabra1.setPalabra("Hola");
+    Palabra palabra2 = new Palabra();
+    palabra2.setPalabra("Holanda");
+
+    when(palabraRepository.findByPalabraContainingIgnoreCase("hola")).thenReturn(Arrays.asList(palabra1, palabra2));
+
+    List<Palabra> foundPalabras = diccionarioService.searchPalabrasByName("hola");
+
+    assertEquals(2, foundPalabras.size());
+    assertEquals("Hola", foundPalabras.get(0).getPalabra());
+    assertEquals("Holanda", foundPalabras.get(1).getPalabra());
+
+    verify(palabraRepository, times(1)).findByPalabraContainingIgnoreCase("hola");
+}
+
+
+
+@Test
+void testSearchPalabrasByNameNoResults() {
+    when(palabraRepository.findByPalabraContainingIgnoreCase("xyz")).thenReturn(Arrays.asList());
+
+    List<Palabra> foundPalabras = diccionarioService.searchPalabrasByName("xyz");
+
+    assertTrue(foundPalabras.isEmpty());
+
+    verify(palabraRepository, times(1)).findByPalabraContainingIgnoreCase("xyz");
+}
+
 
 }
 

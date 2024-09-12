@@ -83,17 +83,14 @@ public class DiccionarioService {
     @Transactional
     public Palabra updatePalabra(Long id, Palabra updatedPalabra) {
         return palabraRepository.findById(id).map(existingPalabra -> {
-            // Actualizar el nombre de la palabra
             existingPalabra.setPalabra(updatedPalabra.getPalabra());
 
-            // Actualizar otros campos
             existingPalabra.setDescripcion(updatedPalabra.getDescripcion());
             existingPalabra.setEjemploUso(updatedPalabra.getEjemploUso());
             existingPalabra.setNivelDificultad(updatedPalabra.getNivelDificultad());
             existingPalabra.setFrecuenciaUso(updatedPalabra.getFrecuenciaUso());
             existingPalabra.setFechaCreacion(updatedPalabra.getFechaCreacion());
 
-            // Actualizar el idioma
             Optional<Idioma> idioma = idiomaRepository.findById(updatedPalabra.getIdioma().getId());
             if (idioma.isPresent()) {
                 existingPalabra.setIdioma(idioma.get());
@@ -101,7 +98,6 @@ public class DiccionarioService {
                 throw new EntityNotFoundException("Idioma not found");
             }
 
-            // Guardar cambios
             return palabraRepository.save(existingPalabra);
         }).orElseThrow(() -> new EntityNotFoundException("Palabra not found"));
     }

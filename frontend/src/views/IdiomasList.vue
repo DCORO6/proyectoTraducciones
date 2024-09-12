@@ -336,10 +336,12 @@ strong {
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin: 20px;
   margin-top: 100px;
+  gap: 2px; 
+  flex-wrap: wrap; 
+
 }
 
 .header-image {
@@ -357,6 +359,8 @@ strong {
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  margin-left: auto;
+
 }
 
 .btn-create:hover {

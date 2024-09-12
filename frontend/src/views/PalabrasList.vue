@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" />
+      <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" title="Icono de la vista de palabras"/>
       <input type="text" v-model="searchQuery" @input="searchPalabra" placeholder="Buscar palabra..."
         class="search-input">
      
@@ -44,7 +44,6 @@
       <p v-else style="margin-left: 10px;">No hay palabras disponibles.</p>
     </div>
 
-    <!-- Modal de confirmación -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h3>¿Estás seguro de que deseas eliminar esta palabra?</h3>
@@ -54,7 +53,6 @@
       </div>
     </div>
 
-    <!-- Modal de detalles de la palabra -->
     <div v-if="showDetailsModal" class="modal-overlay">
       <div class="modal">
         <button @click="closeDetails" class="btn-close">×</button>
@@ -81,8 +79,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const toast = useToast();
 
-const palabrasOriginal = ref([]); // Lista completa de palabras
-const palabras = ref([]); // Lista filtrada de palabras
+const palabrasOriginal = ref([]); 
+const palabras = ref([]);
 const idiomas = ref([]);
 const loading = ref(true);
 const showModal = ref(false);
@@ -94,8 +92,8 @@ const selectedIdioma = ref('');
 const fetchPalabras = async () => {
   try {
     const response = await axios.get('/api/palabras');
-    palabrasOriginal.value = response.data; // Guardamos la lista original
-    palabras.value = response.data; // Inicializamos la lista visible
+    palabrasOriginal.value = response.data; 
+    palabras.value = response.data; 
   } catch (error) {
     console.error("Error al cargar palabras:", error);
   } finally {
@@ -116,7 +114,7 @@ const filterByIdioma = () => {
   if (selectedIdioma.value) {
     palabras.value = palabrasOriginal.value.filter(palabra => palabra.idioma.id === selectedIdioma.value);
   } else {
-    palabras.value = palabrasOriginal.value; // Restauramos todas las palabras si no hay filtro
+    palabras.value = palabrasOriginal.value; 
   }
 };
 
@@ -257,7 +255,6 @@ strong {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1;
-  /* Muestra solo 12 líneas de texto */
   -webkit-box-orient: vertical;
 }
 
@@ -265,7 +262,6 @@ strong {
   margin-top: 12px;
   display: flex;
   gap: 10px;
-  /* Espacio entre los botones */
 }
 
 .btn {
@@ -283,10 +279,8 @@ strong {
 
 .btn img {
   width: 20px;
-  /* Ajusta el tamaño de las imágenes */
   height: 20px;
   margin-right: 6px;
-  /* Espacio entre la imagen y el texto */
 }
 
 .btn-delete {
@@ -328,6 +322,7 @@ strong {
   height: 40px;
   background-color: #28a745;
   text-align: center;
+  margin-left: auto;
 }
 
 .btn-create img {
@@ -338,7 +333,6 @@ strong {
 
 .btn-create:hover {
   background-color: #218838;
-  /* Color de fondo cuando el cursor está sobre el botón */
 }
 
 
@@ -457,10 +451,11 @@ strong {
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin: 20px;
   margin-top: 100px;
+  flex-wrap: wrap; 
+  gap: 2px; 
   
 }
 

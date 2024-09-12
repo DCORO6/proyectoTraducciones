@@ -2,7 +2,7 @@
   <div class="home-page">
     <div class="welcome-section">
       <h1>¡Bienvenido a tu diccionario!</h1>
-      <p>Aquí podrás gestionar idiomas y palabras que quieres que aparezcan en este.</p>
+      <p>Aquí podrás gestionar los idiomas y palabras que quieres que aparezcan en el diccionario.</p>
       <div v-if="randomWord" class="random-word-container">
         <p class="random-word-title">Palabra del día:</p>
         <p><strong>Nombre:</strong> {{ randomWord.palabra }}</p>
@@ -19,20 +19,20 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from '@/axios'; // Asegúrate de que la ruta es correcta
+import axios from '@/axios';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const randomWord = ref(null);
 
-// Función para obtener la palabra aleatoria
+
 const fetchRandomWord = async () => {
   try {
-    const response = await axios.get('/api/palabras/random'); // Asegúrate de que la URL es correcta
+    const response = await axios.get('/api/palabras/random');
     const palabra = response.data;
     if (palabra) {
       randomWord.value = palabra;
-      // Guardar en localStorage
+     
       localStorage.setItem('randomWord', JSON.stringify(palabra));
       localStorage.setItem('lastFetch', new Date().toISOString());
     } else {
@@ -43,7 +43,6 @@ const fetchRandomWord = async () => {
   }
 };
 
-// Función para cargar la palabra desde el almacenamiento local
 const loadWordFromStorage = () => {
   const storedWord = localStorage.getItem('randomWord');
   const lastFetch = localStorage.getItem('lastFetch');
@@ -52,14 +51,12 @@ const loadWordFromStorage = () => {
     const now = new Date();
     const fetchTime = new Date(lastFetch);
 
-    // Verificar si han pasado 24 horas
     if (now - fetchTime < 24 * 60 * 60 * 1000) {
       randomWord.value = JSON.parse(storedWord);
       return;
     }
   }
 
-  // Si no hay palabra guardada o han pasado más de 24 horas, obtener una nueva
   fetchRandomWord();
 };
 
@@ -71,7 +68,6 @@ const goToIdiomasList = () => {
   router.push({ name: 'IdiomasList' });
 };
 
-// Cargar la palabra cuando se monta el componente
 onMounted(() => {
   loadWordFromStorage();
 });
