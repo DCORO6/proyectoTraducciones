@@ -126,5 +126,9 @@ public class DiccionarioService {
         return palabraRepository.existsById(id);
     }
 
-    
+    @Transactional(readOnly = true)
+    public List<Palabra> searchPalabrasByName(String palabra) {
+        return palabraRepository.findByPalabraContainingIgnoreCase(palabra);
+    }
+
 }

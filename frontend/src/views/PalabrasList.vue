@@ -1,17 +1,20 @@
 <template>
   <div>
-      <div class="header">
-        <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" title="Icono de la vista de palabras" />
-        <select v-model="selectedIdioma" @change="filterByIdioma" class="language-select">
+    <div class="header">
+      <img src="@/assets/img/palabraslogo.png" alt="Palabras" class="header-image" />
+      <input type="text" v-model="searchQuery" @input="searchPalabra" placeholder="Buscar palabra..."
+        class="search-input">
+     
+      <select v-model="selectedIdioma" @change="filterByIdioma" class="language-select">
         <option value="">Todos los idiomas</option>
         <option v-for="idioma in idiomas" :key="idioma.id" :value="idioma.id">
           {{ idioma.nombre }}
         </option>
       </select>
-  <button @click="goToCreateForm" class="btn-create">
-    <img src="@/assets/img/aniadir.png" alt="Crear" title="Crear palabra" />
-  </button>
-  </div>
+      <button @click="goToCreateForm" class="btn-create">
+        <img src="@/assets/img/aniadir.png" alt="Crear" title="Crear palabra" />
+      </button>
+    </div>
     <div v-if="loading" class="loading">Cargando...</div>
     <div v-else>
       <div v-if="palabras.length > 0" class="cards-container">
@@ -24,16 +27,16 @@
             <p><small>Dificultad: {{ palabra.nivelDificultad }}, Frecuencia: {{ palabra.frecuenciaUso }}</small></p>
           </div>
           <div class="card-footer">
-            
+
             <button @click="editPalabra(palabra)" class="btn btn-edit">
-              <img src="@/assets/img/editar.png" alt="Editar" title="Editar palabra"/>
-            
+              <img src="@/assets/img/editar.png" alt="Editar" title="Editar palabra" />
+
             </button>
             <button @click="viewDetails(palabra)" class="btn btn-details">
               <img src="@/assets/img/ver.png" alt="Ver detalles" title="Ver detalles" />
             </button>
             <button @click="confirmDelete(palabra)" class="btn btn-delete">
-              <img src="@/assets/img/eliminar.png" alt="Eliminar" title="Eliminar palabra"/>
+              <img src="@/assets/img/eliminar.png" alt="Eliminar" title="Eliminar palabra" />
             </button>
           </div>
         </div>
@@ -57,7 +60,8 @@
         <button @click="closeDetails" class="btn-close">×</button>
         <h2 class="modal-title"> <strong>{{ selectedPalabra.palabra }}</strong></h2>
         <p><strong>Descripción:</strong> <span class="modal-description">{{ selectedPalabra.descripcion }}</span></p>
-        <p class="example-box"><strong>Ejemplo de uso:</strong> <span class="modal-example">{{ selectedPalabra.ejemploUso }}</span></p>
+        <p class="example-box"><strong>Ejemplo de uso:</strong> <span class="modal-example">{{
+          selectedPalabra.ejemploUso }}</span></p>
         <p><strong>Nivel de dificultad:</strong> {{ selectedPalabra.nivelDificultad }}</p>
         <p><strong>Frecuencia de uso:</strong> {{ selectedPalabra.frecuenciaUso }}</p>
         <p><strong>Fecha de creación:</strong> {{ selectedPalabra.fechaCreacion }}</p>
@@ -141,7 +145,7 @@ const deletePalabra = async () => {
 };
 
 const goToCreateForm = () => {
-  router.push({ name: 'PalabrasForm' }); 
+  router.push({ name: 'PalabrasForm' });
 };
 
 const editPalabra = (palabra) => {
@@ -158,9 +162,29 @@ const closeDetails = () => {
   showDetailsModal.value = false;
 };
 
+const searchQuery = ref('');
+
+const searchPalabra = async () => {
+    if (searchQuery.value.trim()) {
+        try {
+            const response = await axios.get(`/api/palabras/search/${searchQuery.value}`);
+            palabrasOriginal.value = response.data;
+        } catch (error) {
+            console.error("Error al buscar palabras:", error);
+        }
+    } else {
+        
+        await fetchPalabras();
+    }
+    filterByIdioma(); 
+};
+
+
+
+
 onMounted(() => {
   fetchPalabras();
-  fetchIdiomas(); 
+  fetchIdiomas();
 });
 </script>
 
@@ -177,6 +201,17 @@ onMounted(() => {
 strong {
   font-weight: bold;
 }
+
+.search-input {
+    padding: 5px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #464242;
+    margin-left: 10px;
+    width: 300px;
+}
+
+
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -207,9 +242,9 @@ strong {
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .card-body {
@@ -221,13 +256,16 @@ strong {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 1; /* Muestra solo 12 líneas de texto */
+  -webkit-line-clamp: 1;
+  /* Muestra solo 12 líneas de texto */
   -webkit-box-orient: vertical;
 }
+
 .card-footer {
   margin-top: 12px;
   display: flex;
-  gap: 10px; /* Espacio entre los botones */
+  gap: 10px;
+  /* Espacio entre los botones */
 }
 
 .btn {
@@ -244,9 +282,11 @@ strong {
 }
 
 .btn img {
-  width: 20px; /* Ajusta el tamaño de las imágenes */
+  width: 20px;
+  /* Ajusta el tamaño de las imágenes */
   height: 20px;
-  margin-right: 6px; /* Espacio entre la imagen y el texto */
+  margin-right: 6px;
+  /* Espacio entre la imagen y el texto */
 }
 
 .btn-delete {
@@ -272,10 +312,11 @@ strong {
 .btn-details:hover {
   background-color: #1976d2;
 }
+
 .btn-create {
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   border: none;
   color: white;
   cursor: pointer;
@@ -283,20 +324,21 @@ strong {
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  width: 80px; 
-  height: 40px; 
-  background-color: #28a745; 
+  width: 80px;
+  height: 40px;
+  background-color: #28a745;
   text-align: center;
 }
 
 .btn-create img {
-  width: 34px; 
+  width: 34px;
   height: 35px;
 }
 
 
 .btn-create:hover {
-  background-color: #218838; /* Color de fondo cuando el cursor está sobre el botón */
+  background-color: #218838;
+  /* Color de fondo cuando el cursor está sobre el botón */
 }
 
 
@@ -344,12 +386,13 @@ strong {
   color: #000;
 }
 
-.modal-description, .modal-example {
-  overflow-wrap: break-word; 
-  word-wrap: break-word; 
-  word-break: break-word; 
-  white-space: normal; 
-  display: block; 
+.modal-description,
+.modal-example {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  display: block;
   margin-bottom: 10px;
 }
 
@@ -418,14 +461,15 @@ strong {
   align-items: center;
   margin: 20px;
   margin-top: 100px;
+  
 }
 
 .header-image {
-  width: 40px; 
-  height: 40px; 
+  width: 40px;
+  height: 40px;
 }
 
-.language-select{
+.language-select {
   padding: 5px;
   font-size: 1rem;
   border-radius: 5px;

@@ -204,8 +204,8 @@ onMounted(() => {
   border-radius: 8px;
   background-color: #f9f9f9;
   margin-top: 100px;
-  max-height: 80vh; /* Ajusta según sea necesario */
-  overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura máxima */
+  max-height: 80vh; 
+  overflow-y: auto; 
   width: 100%;
   max-width: 500px;
 

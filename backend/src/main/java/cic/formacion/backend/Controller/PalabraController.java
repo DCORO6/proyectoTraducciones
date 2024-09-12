@@ -48,22 +48,19 @@ public class PalabraController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-  
-
     @PutMapping("/{id}")
-public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabra) {
-    if (!diccionarioService.existsPalabraById(id)) {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody Palabra palabra) {
+        if (!diccionarioService.existsPalabraById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (palabra.getIdioma() == null || palabra.getIdioma().getId() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        Palabra updatedPalabra = diccionarioService.updatePalabra(id, palabra);
+        return ResponseEntity.ok(updatedPalabra);
     }
-
-    if (palabra.getIdioma() == null || palabra.getIdioma().getId() == null) {
-        return ResponseEntity.badRequest().body(null);
-    }
-
-    Palabra updatedPalabra = diccionarioService.updatePalabra(id, palabra);
-    return ResponseEntity.ok(updatedPalabra);
-}
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePalabra(@PathVariable Long id) {
@@ -81,6 +78,15 @@ public ResponseEntity<Palabra> updatePalabra(@PathVariable Long id, @RequestBody
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }
+    @GetMapping("/search/{palabra}")
+    public ResponseEntity<List<Palabra>> searchPalabrasByName(@PathVariable String palabra) {
+        List<Palabra> palabras = diccionarioService.searchPalabrasByName(palabra);
+        if (palabras.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(palabras);
+    }
+    
 
     
 }
