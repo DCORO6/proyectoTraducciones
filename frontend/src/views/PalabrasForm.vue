@@ -1,4 +1,5 @@
 <template>
+    <div class="page-background">
     <form @submit.prevent="handleSubmit" class="add-palabra-form">
       <div class="form-group">
         <label for="palabra">Palabra:</label>
@@ -47,7 +48,7 @@
         <button type="button" class="btn-back" @click="goBack">Volver</button>
       </div>
     </form>
- 
+    </div>
 </template>
 
 <script setup>
@@ -177,6 +178,17 @@ onMounted(() => {
 
 <style scoped>
 
+.page-background {
+  background-image: url('@/assets/img/book.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; 
+  padding: 20px; 
+  background-color: rgb(212, 205, 200);
+  
+
+}
 
 .add-palabra-form {
   max-width: 500px;
@@ -215,7 +227,7 @@ onMounted(() => {
 }
 
 .form-group .numeric-right {
-  width: 15%;
+  width: 17%;
 
 }
 

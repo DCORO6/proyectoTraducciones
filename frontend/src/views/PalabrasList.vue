@@ -78,7 +78,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const toast = useToast();
 
-const palabras = ref([]);
+const palabrasOriginal = ref([]); // Lista completa de palabras
+const palabras = ref([]); // Lista filtrada de palabras
 const idiomas = ref([]);
 const loading = ref(true);
 const showModal = ref(false);
@@ -90,7 +91,8 @@ const selectedIdioma = ref('');
 const fetchPalabras = async () => {
   try {
     const response = await axios.get('/api/palabras');
-    palabras.value = response.data;
+    palabrasOriginal.value = response.data; // Guardamos la lista original
+    palabras.value = response.data; // Inicializamos la lista visible
   } catch (error) {
     console.error("Error al cargar palabras:", error);
   } finally {
@@ -109,9 +111,9 @@ const fetchIdiomas = async () => {
 
 const filterByIdioma = () => {
   if (selectedIdioma.value) {
-    palabras.value = palabras.value.filter(palabra => palabra.idioma.id === selectedIdioma.value);
+    palabras.value = palabrasOriginal.value.filter(palabra => palabra.idioma.id === selectedIdioma.value);
   } else {
-    fetchPalabras(); 
+    palabras.value = palabrasOriginal.value; // Restauramos todas las palabras si no hay filtro
   }
 };
 
@@ -128,11 +130,12 @@ const cancelDelete = () => {
 const deletePalabra = async () => {
   try {
     await axios.delete(`/api/palabras/${palabraAEliminar.value.id}`);
+    palabrasOriginal.value = palabrasOriginal.value.filter(p => p.id !== palabraAEliminar.value.id);
     palabras.value = palabras.value.filter(p => p.id !== palabraAEliminar.value.id);
-    toast.success("Palabra "+ palabraAEliminar.value.palabra +" eliminada correctamente");
+    toast.success("Palabra " + palabraAEliminar.value.palabra + " eliminada correctamente");
   } catch (error) {
     console.error("Error al eliminar palabra:", error);
-    toast.error("Error al eliminar la palabra "+ palabraAEliminar.value.palabra);
+    toast.error("Error al eliminar la palabra " + palabraAEliminar.value.palabra);
   } finally {
     cancelDelete();
   }
@@ -158,12 +161,17 @@ const closeDetails = () => {
 
 onMounted(() => {
   fetchPalabras();
-  fetchIdiomas(); // Cargar la lista de idiomas
+  fetchIdiomas(); 
 });
 </script>
 
 
+
 <style scoped>
+
+strong {
+  font-weight: bold;
+}
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -180,6 +188,7 @@ onMounted(() => {
   padding: 10px;
   width: 300px; /* Hacer la tarjeta más alargada */
   height: 100%; /* Hacer la tarjeta más alta */
+  max-height: 150px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -193,6 +202,9 @@ onMounted(() => {
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .card-body {
@@ -204,7 +216,7 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 1; /* Muestra solo 12 líneas de texto */
   -webkit-box-orient: vertical;
 }
 .card-footer {
@@ -258,7 +270,7 @@ onMounted(() => {
 .btn-create {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centra el contenido horizontalmente */
+  justify-content: center; 
   border: none;
   color: white;
   cursor: pointer;
@@ -266,8 +278,8 @@ onMounted(() => {
   font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  width: 80px; /* Aumentar el ancho para acomodar la imagen y el texto */
-  height: 40px; /* Asegura que el botón tenga suficiente altura */
+  width: 80px; 
+  height: 40px; 
   background-color: #28a745; 
   text-align: center;
 }
@@ -323,11 +335,12 @@ onMounted(() => {
 }
 
 .modal-description, .modal-example {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
+  overflow-wrap: break-word; 
+  word-wrap: break-word; 
+  word-break: break-word; 
+  white-space: normal; 
+  display: block; 
+  margin-bottom: 10px;
 }
 
 .example-box {
@@ -336,6 +349,7 @@ onMounted(() => {
   padding: 10px;
   background-color: #f1f1f1;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .btn-confirm {
@@ -399,5 +413,15 @@ onMounted(() => {
 .header-image {
   width: 40px; 
   height: 40px; 
+}
+
+.language-select{
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #464242;
+  cursor: pointer;
+  margin-right: 10px;
+  width: 200px;
 }
 </style>

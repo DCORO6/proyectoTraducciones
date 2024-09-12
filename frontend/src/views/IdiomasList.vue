@@ -12,10 +12,10 @@
       <div v-if="idiomas.length > 0" class="cards-container">
         <div v-for="idioma in idiomas" :key="idioma.id" class="card">
           <div class="card-header">
-            <strong>{{ idioma.nombre }}</strong>
+            <p>{{ idioma.nombre }}</p>
           </div>
           <div class="card-body">
-            <p><small>Región: {{ idioma.region }}</small></p>
+            <p><small><strong>Región:</strong> {{ idioma.region }}</small></p>
           </div>
           <div class="card-footer">
 
@@ -137,6 +137,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+strong {
+  font-weight: bold;
+}
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -163,17 +167,22 @@ onMounted(() => {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .card-body {
   font-size: 1rem;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .card-footer {
   margin-top: 12px;
   display: flex;
   gap: 10px;
-  /* Espacio entre los botones */
 }
 
 .btn {
@@ -223,7 +232,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Centra el contenido horizontalmente */
   border: none;
   color: white;
   cursor: pointer;
@@ -232,9 +240,7 @@ onMounted(() => {
   font-weight: bold;
   transition: background-color 0.3s ease;
   width: 80px;
-  /* Aumentar el ancho para acomodar la imagen y el texto */
   height: 40px;
-  /* Asegura que el botón tenga suficiente altura */
   background-color: #28a745;
   text-align: center;
 }
@@ -247,7 +253,6 @@ onMounted(() => {
 
 .btn-create:hover {
   background-color: #218838;
-  /* Color de fondo cuando el cursor está sobre el botón */
 }
 
 .modal-overlay {
@@ -270,6 +275,7 @@ onMounted(() => {
   width: 400px;
   text-align: left;
   position: relative;
+  word-wrap: break-word;
 }
 
 .btn-close {

@@ -3,7 +3,7 @@
   <form @submit.prevent="handleSubmit" class="add-idioma-form">
     <div class="form-group">
       <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" v-model="formData.nombre" required class="form-control" />
+      <input type="text" id="nombre" v-model="formData.nombre" required class="form-control" maxlength="30"/>
     </div>
     <div class="form-group">
       <label for="codigoIso">Código ISO:</label>
@@ -29,7 +29,7 @@
     </div>
     <div class="form-group">
       <label for="region">Región:</label>
-      <input type="text" id="region" v-model="formData.region" required class="form-control" />
+      <input type="text" id="region" v-model="formData.region" required class="form-control" maxlength="50"/>
     </div>
     <div class="form-buttons">
       <button type="submit" class="btn-submit">
